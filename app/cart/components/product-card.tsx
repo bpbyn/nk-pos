@@ -42,23 +42,28 @@ export default function ProductCard({
           />
           <div className="flex flex-col justify-center gap-4">
             <CardTitle className="text-xl">{name}</CardTitle>
-            <div className="flex flex-row-reverse justify-between gap-4 md:flex-col md:justify-center">
-              <Badge className="w-fit text-xs shadow">₱120</Badge>
-              <Tabs defaultValue="regular">
-                <TabsList className="bg-transparent pl-0">
-                  <TabsTrigger value="regular" className="data-[state=active]:bg-muted">
-                    R
-                  </TabsTrigger>
-                  <TabsTrigger value="large" className="data-[state=active]:bg-muted">
-                    L
-                  </TabsTrigger>
-                </TabsList>
-                {/* <TabsContent value="hot">Make changes to your account here.</TabsContent>
+            {/* <CardDescription> */}
+            <Badge className="w-fit">₱120</Badge>
+
+            <Tabs defaultValue="regular">
+              <TabsList className="bg-transparent w-full pl-0">
+                <TabsTrigger
+                  value="regular"
+                  className="data-[state=active]:bg-muted w-full md:text-xs"
+                >
+                  REGULAR
+                </TabsTrigger>
+                <TabsTrigger
+                  value="large"
+                  className="data-[state=active]:bg-muted w-full md:text-xs"
+                >
+                  LARGE
+                </TabsTrigger>
+              </TabsList>
+              {/* <TabsContent value="hot">Make changes to your account here.</TabsContent>
             <TabsContent value="cold">Change your password here.</TabsContent>
             <TabsContent value="snack">Change your password here.</TabsContent> */}
-              </Tabs>
-            </div>
-
+            </Tabs>
             {/* </CardDescription> */}
           </div>
         </div>
@@ -71,15 +76,15 @@ export default function ProductCard({
               LARGE
             </ToggleGroupItem>
           </ToggleGroup> */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center gap-3 md:justify-center">
-              <Button variant="outline" className="h-7" size="icon" onClick={() => ({})}>
+              <Button variant="outline" className="" size="icon" onClick={() => ({})}>
                 <Minus className="h-3 w-3" />
               </Button>
-              <Badge variant="secondary" className="h-7 text-xs shadow">
+              <Badge variant="secondary" className="py-2 shadow">
                 <div className="text-center w-full">1</div>
               </Badge>
-              <Button variant="outline" className="h-7" size="icon" onClick={() => ({})}>
+              <Button variant="outline" className="" size="icon" onClick={() => ({})}>
                 <Plus className="h-3 w-3" />
               </Button>
             </div>
