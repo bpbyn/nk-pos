@@ -21,6 +21,7 @@
     "next",
     "next/core-web-vitals"
   ],
+  "ignorePatterns": ["/components/ui/*.tsx"],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -57,6 +58,7 @@
       }
     ]
   },
+
   "settings": {
     "react": {
       "version": "detect"
