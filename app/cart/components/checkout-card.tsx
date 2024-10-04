@@ -73,8 +73,6 @@ export default function CheckoutCard() {
     }
   }
 
-  console.log('orderDetails', orderDetails);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
