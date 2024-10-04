@@ -2,12 +2,9 @@ import { db } from '@/lib/firebase/firebase';
 import { DocumentData, collection, getDocs, query } from 'firebase/firestore';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const dynamic = 'force-dynamic';
-
 export async function GET(request: NextRequest) {
+  const collectionName = request.nextUrl.searchParams.get('collectionName');
   try {
-    const collectionName = request.nextUrl.searchParams.get('collectionName');
-
     if (!collectionName) {
       return NextResponse.json({ error: 'Collection name is required' }, { status: 400 });
     }
