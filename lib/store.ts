@@ -124,6 +124,6 @@ const useOrderStore = create<State & Actions>()(
 );
 
 useOrderStore.getState().getProducts('products');
-useOrderStore.getState().getQueueCount('counter', 'queue');
+// useOrderStore.getState().getQueueCount('counter', 'queue');
 
 export default useOrderStore;
