@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     //   return NextResponse.json({ error: 'Document ID is required' }, { status: 400 });
     // }
 
-    const document = await getDocument(collectionName ?? '', documentId ?? '');
+    const document = await getDocument(collectionName ?? 'counter', documentId ?? 'queue');
 
     return NextResponse.json(document);
   } catch (error) {
