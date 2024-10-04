@@ -1,5 +1,6 @@
 import MainNav from '@/components/main-nav';
 import SideNav from '@/components/side-nav';
+import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import Providers from '@/providers/providers';
 import type { Metadata } from 'next';
@@ -10,6 +11,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 // const vollkorn = Vollkorn({ subsets: ['latin'] });
 // const josefinSans = Josefin_Sans({ subsets: ['latin'] });
+// const urbanist = Urbanist({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Northern Kaffeine POS',
@@ -34,6 +36,7 @@ export default function RootLayout({
             {children}
           </div>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );
