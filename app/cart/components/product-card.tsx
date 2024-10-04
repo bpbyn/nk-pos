@@ -53,32 +53,36 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Card className="min-w-72">
-      <CardHeader className="flex flex-col justify-between h-full">
+      <CardHeader className="flex h-full flex-col justify-between">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8">
-          <Image
-            src={product.asset ?? '/placeholder.svg'}
-            alt={product.name}
-            priority
-            width="0"
-            height="0"
-            sizes="100vw"
-            className="w-full h-48 object-cover md:h-auto rounded-xl"
-          />
+          <div className="relative min-h-48 w-full md:h-auto">
+            <Image
+              src={product.asset ?? '/placeholder.svg'}
+              alt={product.name}
+              priority
+              fill
+              className="rounded-xl object-contain"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
           <div className="flex flex-col justify-center gap-4">
-            <CardTitle className="text-xl">{product.name}</CardTitle>
-            <Badge className="w-fit">{product.size[order.size]}</Badge>
+            <CardTitle className="align-center flex justify-between text-xl md:inline-block">
+              {product.name}
+              <Badge className="grid w-fit md:hidden">{product.size[order.size]}</Badge>
+            </CardTitle>
+            <Badge className="hidden w-fit md:inline-block">{product.size[order.size]}</Badge>
 
             <Tabs value={order.size} onValueChange={handleTabChange}>
-              <TabsList className="bg-transparent w-full pl-0">
+              <TabsList className="w-full bg-transparent pl-0">
                 <TabsTrigger
                   value="regular"
-                  className="data-[state=active]:bg-muted w-full md:text-xs"
+                  className="w-full data-[state=active]:bg-muted md:text-xs"
                 >
                   {productSize.regular}
                 </TabsTrigger>
                 <TabsTrigger
                   value="large"
-                  className="data-[state=active]:bg-muted w-full md:text-xs"
+                  className="w-full data-[state=active]:bg-muted md:text-xs"
                   disabled={!product.size['large']}
                 >
                   {productSize.large}
@@ -87,7 +91,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </Tabs>
           </div>
         </div>
-        <CardContent className="px-0 grid gap-y-4 pt-2 pb-0">
+        <CardContent className="grid gap-y-4 px-0 pb-0 pt-2">
           <div className="grid grid-cols-2 gap-4">
             <ProductStepper
               className="justify-center"

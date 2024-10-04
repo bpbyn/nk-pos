@@ -43,7 +43,7 @@ export default function ProductStepper({
         <Minus className="h-3 w-3" />
       </Button>
       <Badge variant="secondary" className="py-2 shadow">
-        <div className="text-center w-full">{counter}</div>
+        <div className="w-full text-center">{counter}</div>
       </Badge>
       <Button
         variant="outline"

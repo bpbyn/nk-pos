@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { addDocument, updateCounter } from '@/lib/firebase/service';
 import useOrderStore from '@/lib/store';
 import { Order, Product, orderStatus } from '@/lib/types';
-import { findProduct, pad } from '@/lib/utils';
+import { cn, findProduct, pad } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -22,7 +22,13 @@ const CheckoutSchema = z.object({
   customerName: z.string().min(1, 'Customer name is required.'),
 });
 
-export default function CheckoutCard() {
+export default function CheckoutCard({
+  onCheckout,
+  className,
+}: {
+  onCheckout?: () => void;
+  className?: string;
+}) {
   const orderDetails = useOrderStore((state) => state.orderDetails);
   const { queueCount } = useOrderStore((state) => state.queueCount);
   const products = useOrderStore((state) => state.products);
@@ -45,6 +51,7 @@ export default function CheckoutCard() {
 
   async function onSubmit({ customerName }: z.infer<typeof CheckoutSchema>) {
     if (totalPrice === 0) return;
+    onCheckout?.();
     try {
       toast.loading('Placing the order... Please wait.');
       const newQueueCount = queueCount + 1;
@@ -76,17 +83,17 @@ export default function CheckoutCard() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Card className="overflow-hidden lg:col-span-1 flex flex-col">
+        <Card className={cn('flex flex-col overflow-hidden lg:col-span-1', className)}>
           <CardHeader className="flex flex-col bg-muted/50 py-4">
-            <CardTitle className="flex items-center justify-between w-full">
+            <CardTitle className="flex w-full items-center justify-between">
               <div className="text-xl font-bold">Cart</div>
-              <div className="text-muted-foreground font-normal">SO-{pad(queueCount)}</div>
+              <div className="font-normal text-muted-foreground">SO-{pad(queueCount)}</div>
             </CardTitle>
             <div className="ml-auto flex items-center gap-1"></div>
           </CardHeader>
-          <CardContent className="py-4 px-6 text-sm flex-1 flex flex-col justify-between gap-4">
+          <CardContent className="flex flex-1 flex-col justify-between gap-4 px-6 py-4 text-sm">
             <div className="grid gap-3">
-              <div className="font-bold text-lg">Order Details</div>
+              <div className="text-lg font-bold">Order Details</div>
               <FormField
                 control={form.control}
                 name="customerName"
@@ -106,7 +113,7 @@ export default function CheckoutCard() {
               />
 
               {/* <Separator className="mt-1" /> */}
-              <ul className="grid gap-3 grid-cols-1 max-h-[30rem] overflow-y-auto">
+              <ul className="grid max-h-[30rem] grid-cols-1 gap-3 overflow-y-auto">
                 {orderDetails.map((orderDetail, i) => {
                   const product = findProduct<Product, keyof Product>(
                     products,
@@ -115,14 +122,14 @@ export default function CheckoutCard() {
                   );
                   return (
                     <li key={`orderDetail-${i}`} className="grid grid-cols-2 gap-2">
-                      <span className="grid grid-rows-3 lg:grid-rows-1 gap-1">
+                      <span className="grid grid-rows-3 gap-1 lg:grid-rows-1">
                         <span className="text-md font-bold">{product?.name}</span>
                         <span className="text-xs">₱{product?.size[orderDetail.size]} each</span>
-                        <div className="flex gap-2 justify-start">
-                          <Badge variant="secondary" className="rounded-full px-2 py-0">
+                        <div className="flex justify-start gap-2">
+                          <Badge variant="secondary" className="px-2 py-0">
                             {orderDetail.type}
                           </Badge>
-                          <Badge variant="secondary" className="rounded-full px-2 py-0">
+                          <Badge variant="secondary" className="px-2 py-0">
                             {orderDetail.size}
                           </Badge>
                         </div>

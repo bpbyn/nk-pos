@@ -24,10 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         // className={cn('antialiased', inter.className, vollkorn.className, josefinSans.className)}
-        className={cn('antialiased flex min-h-screen w-full flex-col', inter.className)}
+        className={cn('flex min-h-svh w-full flex-col bg-muted/30 antialiased', inter.className)}
       >
         <Providers>
           <SideNav />
