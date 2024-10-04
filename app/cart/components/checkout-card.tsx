@@ -103,7 +103,7 @@ export default function CheckoutCard({
                       <Input
                         type="name"
                         placeholder="Enter customer name..."
-                        className="w-full"
+                        className="w-full text-base"
                         {...field}
                       />
                     </FormControl>
