@@ -19,19 +19,21 @@ export default function Orders() {
 
     const q = query(orderCollectionRef, where('timestamp', '>', startOfDay));
     const unsubscribe = onSnapshot(q, (snapshots) => {
-      const fetchedOrders = snapshots.docs.map((doc: DocumentData) => {
-        const { customerName, timestamp, id, status, orders, totalPrice } = doc.data();
-        const completeDoc: Order = {
-          id,
-          orderId: doc.id,
-          customerName,
-          timestamp,
-          status,
-          orders,
-          totalPrice,
-        };
-        return completeDoc;
-      });
+      const fetchedOrders = snapshots.docs
+        .map((doc: DocumentData) => {
+          const { customerName, timestamp, id, status, orders, totalPrice } = doc.data();
+          const completeDoc: Order = {
+            id,
+            orderId: doc.id,
+            customerName,
+            timestamp,
+            status,
+            orders,
+            totalPrice,
+          };
+          return completeDoc;
+        })
+        .sort((a, b) => b.timestamp - a.timestamp);
       useOrderStore.setState({ orders: fetchedOrders });
     });
     return () => unsubscribe();

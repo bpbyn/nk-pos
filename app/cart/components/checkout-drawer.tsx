@@ -30,7 +30,7 @@ export default function CheckoutDrawer() {
           {orderDetails.length > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs"
+              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs lg:hidden"
             >
               {orderDetails.length}
             </Badge>

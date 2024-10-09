@@ -33,7 +33,7 @@ export default function Products() {
     <Shell>
       <Card>
         <CardHeader>
-          <CardTitle>Products</CardTitle>
+          <CardTitle className="text-xl">Products</CardTitle>
           <CardDescription>Manage your products and view their sales performance.</CardDescription>
         </CardHeader>
         <CardContent>
