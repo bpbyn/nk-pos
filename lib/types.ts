@@ -14,7 +14,7 @@ export const orderStatus = {
   ACTIVE: 'active',
   COMPLETED: 'completed',
   CANCELLED: 'cancelled',
-  LOADING: 'loading',
+  // LOADING: 'loading',
 } as const;
 
 export const productType = {
@@ -46,6 +46,7 @@ export type Product = {
 
 export type Order = {
   id: string;
+  orderId?: string;
   customerName: string;
   timestamp: number;
   status: OrderStatus;

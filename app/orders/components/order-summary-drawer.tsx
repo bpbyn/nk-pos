@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/drawer';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { Order, orderStatus } from '@/lib/types';
+import { cn } from '@/lib/utils';
 import { ArrowUpRight } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -26,7 +27,6 @@ import OrderTable from './order-table';
 export default function OrderSummaryDrawer({ order }: { order: Order }) {
   const [openDrawer, setOpenDrawer] = useState(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
-
   if (isDesktop) {
     return (
       <Dialog onOpenChange={() => setOpenDrawer(!openDrawer)} open={openDrawer}>
@@ -46,21 +46,19 @@ export default function OrderSummaryDrawer({ order }: { order: Order }) {
                 <DialogDescription>Order of {order.customerName}</DialogDescription>
               </div>
               <div className="grid gap-2">
-                {order.status === orderStatus.ACTIVE ? (
-                  <Badge
-                    variant="secondary"
-                    className="bg-green-100/50 capitalize text-green-500 dark:bg-green-900/50 dark:text-green-300"
-                  >
-                    {order.status}
-                  </Badge>
-                ) : (
-                  <Badge
-                    variant="outline"
-                    className="bg-blue-100/50 text-blue-500 dark:bg-blue-900/50 dark:text-blue-300"
-                  >
-                    Complete
-                  </Badge>
-                )}
+                <Badge
+                  variant="secondary"
+                  className={cn(
+                    order.status === orderStatus.ACTIVE &&
+                      'bg-green-100/50 capitalize text-green-500 dark:bg-green-900/50 dark:text-green-300',
+                    order.status === orderStatus.COMPLETED &&
+                      'bg-blue-100/50 capitalize text-blue-500 dark:bg-blue-900/50 dark:text-blue-300',
+                    order.status === orderStatus.CANCELLED &&
+                      'bg-red-100/50 capitalize text-red-500 dark:bg-red-900/50 dark:text-red-300'
+                  )}
+                >
+                  {order.status}
+                </Badge>
               </div>
             </div>
           </DialogHeader>
@@ -88,21 +86,19 @@ export default function OrderSummaryDrawer({ order }: { order: Order }) {
               <DrawerDescription>Order of {order.customerName}</DrawerDescription>
             </div>
             <div className="grid gap-2">
-              {order.status === orderStatus.ACTIVE ? (
-                <Badge
-                  variant="secondary"
-                  className="bg-green-100/50 capitalize text-green-500 dark:bg-green-900/50 dark:text-green-300"
-                >
-                  {order.status}
-                </Badge>
-              ) : (
-                <Badge
-                  variant="outline"
-                  className="bg-blue-100/50 text-blue-500 dark:bg-blue-900/50 dark:text-blue-300"
-                >
-                  Complete
-                </Badge>
-              )}
+              <Badge
+                variant="secondary"
+                className={cn(
+                  order.status === orderStatus.ACTIVE &&
+                    'bg-green-100/50 capitalize text-green-500 dark:bg-green-900/50 dark:text-green-300',
+                  order.status === orderStatus.COMPLETED &&
+                    'bg-blue-100/50 capitalize text-blue-500 dark:bg-blue-900/50 dark:text-blue-300',
+                  order.status === orderStatus.CANCELLED &&
+                    'bg-red-100/50 capitalize text-red-500 dark:bg-red-900/50 dark:text-red-300'
+                )}
+              >
+                {order.status}
+              </Badge>
             </div>
           </div>
         </DrawerHeader>
