@@ -34,6 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const [order, setOrder] = useState<OrderDetail>(initialState);
+  const [imgSrc, setImgSrc] = useState<string>(product.asset ?? 'placeholder.svg');
 
   const handleTabChange = (value: string) => {
     setOrder((orderDetail) => ({
@@ -55,16 +56,15 @@ export default function ProductCard({ product }: ProductCardProps) {
     <Card className="min-w-72">
       <CardHeader className="flex h-full flex-col justify-between">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8">
-          <div className="relative min-h-48 w-full md:h-auto">
-            <Image
-              src={product.asset ?? '/placeholder.svg'}
-              alt={product.name}
-              priority
-              fill
-              className="rounded-xl object-contain"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
+          <Image
+            src={imgSrc}
+            alt={product.name}
+            onError={() => setImgSrc('/placeholder.svg')}
+            priority
+            className="aspect-auto w-full rounded-md object-cover"
+            width="300"
+            height="300"
+          />
           <div className="flex flex-col justify-center gap-4">
             <CardTitle className="align-center flex justify-between text-xl md:inline-block">
               {product.name}

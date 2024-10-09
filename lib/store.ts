@@ -8,7 +8,7 @@ import { Counter, Order, OrderDetail, Product, ProductSize } from './types';
 import { millisToDate } from './utils';
 
 type State = {
-  order: Order[];
+  orders: Order[];
   orderDetails: OrderDetail[];
   products: Product[];
   queueCount: Counter;
@@ -25,7 +25,7 @@ type Actions = {
 };
 
 const initialState: Omit<State, 'products' | 'queueCount'> = {
-  order: [],
+  orders: [],
   orderDetails: [],
 };
 
@@ -33,7 +33,7 @@ const useOrderStore = create<State & Actions>()(
   devtools(
     persist(
       (set, get) => ({
-        order: [],
+        orders: [],
         orderDetails: [],
         products: [],
         queueCount: {

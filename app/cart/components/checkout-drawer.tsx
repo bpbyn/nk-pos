@@ -14,7 +14,7 @@ import React, { useState } from 'react';
 
 import CheckoutCard from './checkout-card';
 
-export default function CheckoutMobileCard() {
+export default function CheckoutDrawer() {
   const [openDrawer, setOpenDrawer] = useState(false);
   return (
     <Drawer onOpenChange={() => setOpenDrawer(!openDrawer)} open={openDrawer}>

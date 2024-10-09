@@ -1,74 +1,138 @@
+'use client';
+
 import Shell from '@/components/shell';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import React from 'react';
+import { db } from '@/lib/firebase/firebase';
+import useOrderStore from '@/lib/store';
+import { DocumentData, collection, onSnapshot, query, where } from '@firebase/firestore';
+import React, { useEffect } from 'react';
+
+import OrderCard from './components/order-card';
 
 export default function Orders() {
+  const orders = useOrderStore((state) => state.orders);
+
+  useEffect(() => {
+    const orderCollectionRef = collection(db, 'orders');
+    const startOfDay = new Date(new Date().setHours(0, 0, 0, 0)).valueOf();
+
+    const q = query(orderCollectionRef, where('timestamp', '>', startOfDay));
+    const unsubscribe = onSnapshot(q, (snapshots) => {
+      const fetchedOrders = snapshots.docs.map((doc: DocumentData) => {
+        const { customerName, timestamp, id, status, orders, totalPrice } = doc.data();
+        const completeDoc = {
+          id,
+          customerName,
+          timestamp,
+          status,
+          orders,
+          totalPrice,
+        };
+        return completeDoc;
+      });
+      useOrderStore.setState({ orders: fetchedOrders });
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <Shell>
       <div className="grid">
         <Tabs defaultValue="all" className="w-full">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="now_brewing">Now Brewing</TabsTrigger>
-            <TabsTrigger value="now_serving">Now Serving</TabsTrigger>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="complete">Complete</TabsTrigger>
           </TabsList>
           <TabsContent value="all" className="grid gap-2 pt-2 md:grid-cols-3 md:gap-4">
-            {/* <Card className="grid gap-4 p-4 md:grid-cols-3 md:p-6"> */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>OM</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">Sandara</p>
-                    <p className="text-sm text-muted-foreground">SO-0001</p>
+            {orders.map((order, i) => (
+              <OrderCard key={`orderCard-${i}`} order={order} />
+            ))}
+            {/* <Card>
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-bold leading-none">Joco</h3>
+                    <Button variant="link" className="p-0">
+                      <div className="flex items-center gap-1">
+                        <p className="text-sm text-muted-foreground">Order #001</p>
+                        <ArrowUpRight className="h-5 w-5" />
+                      </div>
+                    </Button>
                   </div>
-                  <div className="ml-auto font-medium">+$1,999.00</div>
+                  <div className="grid gap-2">
+                    <Badge
+                      variant="secondary"
+                      className="bg-green-100/50 text-green-500 dark:bg-green-900/50 dark:text-green-300"
+                    >
+                      Active
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="flex items-center justify-between p-4">
+                <Button variant="ghost">Cancel</Button>
+                <Button>Serve</Button>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-bold leading-none">Marion</h3>
+                    <Button variant="link" className="p-0">
+                      <div className="flex items-center gap-1">
+                        <p className="text-sm text-muted-foreground">Order #002</p>
+                        <ArrowUpRight className="h-5 w-5" />
+                      </div>
+                    </Button>
+                  </div>
+                  <div className="grid gap-2">
+                    <Badge
+                      variant="secondary"
+                      className="bg-green-100/50 text-green-500 dark:bg-green-900/50 dark:text-green-300"
+                    >
+                      Active
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="flex items-center justify-between p-4">
+                <Button variant="ghost">Cancel</Button>
+                <Button>Serve</Button>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-bold leading-none">Brian</h3>
+                    <Button variant="link" className="p-0">
+                      <div className="flex items-center gap-1">
+                        <p className="text-sm text-muted-foreground">Order #003</p>
+                        <ArrowUpRight className="h-5 w-5" />
+                      </div>
+                    </Button>
+                  </div>
+                  <div className="grid gap-2">
+                    <Badge
+                      variant="outline"
+                      className="bg-blue-100/50 text-blue-500 dark:bg-blue-900/50 dark:text-blue-300"
+                    >
+                      Complete
+                    </Badge>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <span>White Chocolate Mocha</span>
+                <p className="py-4 text-xs text-muted-foreground">
+                  This order has been completed and served.
+                </p>
               </CardContent>
-              {/* <CardHeader className="py-4">
-                <CardTitle className="flex justify-between items-center">
-                  <div className='text-lg'>Joco</div>
-                  <div className="text-sm font-normal text-muted-foreground">SO-007</div>
-                </CardTitle>
-                <CardDescription className="">
-                  
-                  
-                </CardDescription>
-              </CardHeader> */}
-              {/* <CardContent> */}
-              {/* <p>Card Content</p> */}
-
-              {/* </CardContent> */}
-              {/* <CardFooter>
-                <p>Card Footer</p>
-              </CardFooter> */}
-            </Card>
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>OM</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">Olivia Martin</p>
-                    <p className="text-sm text-muted-foreground">olivia.martin@email.com</p>
-                  </div>
-                  <div className="ml-auto font-medium">+$1,999.00</div>
-                </div>
-              </CardHeader>
-            </Card>
+            </Card> */}
           </TabsContent>
-          <TabsContent value="now_brewing">Brewing</TabsContent>
-          <TabsContent value="now_serving">Change your password here.</TabsContent>
+          <TabsContent value="active">Brewing</TabsContent>
+          <TabsContent value="complete">Change your password here.</TabsContent>
         </Tabs>
       </div>
     </Shell>

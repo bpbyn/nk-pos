@@ -58,9 +58,9 @@ export default function CheckoutCard({
 
       const order: Order = {
         customerName,
-        id: `SO-${pad(newQueueCount)}`,
+        id: pad(queueCount),
         orders: orderDetails,
-        status: orderStatus.BREWING,
+        status: orderStatus.ACTIVE,
         timestamp: Date.now(),
         totalPrice,
       };

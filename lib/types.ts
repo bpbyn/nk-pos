@@ -9,8 +9,9 @@ export const routes = {
 } as const;
 
 export const orderStatus = {
-  BREWING: 'brewing',
-  SERVING: 'serving',
+  // BREWING: 'brewing',
+  // SERVING: 'serving',
+  ACTIVE: 'active',
   COMPLETED: 'completed',
   CANCELLED: 'cancelled',
   LOADING: 'loading',
