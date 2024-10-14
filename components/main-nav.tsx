@@ -19,7 +19,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { Package2, PanelLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -27,6 +26,7 @@ import React, { useState } from 'react';
 
 import { ModeToggle } from './mode-toggle';
 import { navigationList } from './side-nav';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 export default function MainNav() {
   const currentPath = usePathname();
@@ -101,12 +101,16 @@ export default function MainNav() {
       </div>
       <ModeToggle />
       <>
-        <SignedOut>
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" width={50} height={50} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        {/* <SignedOut>
           <SignInButton />
         </SignedOut>
         <SignedIn>
           <UserButton />
-        </SignedIn>
+        </SignedIn> */}
       </>
     </header>
   );
