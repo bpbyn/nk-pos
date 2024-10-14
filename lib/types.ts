@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { UploadedFileData } from 'uploadthing/types';
 
 export const routes = {
   DASHBOARD: '/',
@@ -17,6 +18,11 @@ export const orderStatus = {
   // LOADING: 'loading',
 } as const;
 
+export const productCategory = {
+  drinks: 'drinks',
+  snacks: 'snacks',
+} as const;
+
 export const productType = {
   hot: 'hot',
   cold: 'cold',
@@ -28,6 +34,11 @@ export const productSize = {
   large: 'Large',
 } as const;
 
+export const productStatus = {
+  active: 'Active',
+  inactive: 'Inactive',
+} as const;
+
 export type NavigationList = {
   label: string;
   route: string;
@@ -37,11 +48,15 @@ export type NavigationList = {
 export type Product = {
   id: string;
   name: string;
+  description?: string;
+  category: ProductCategory;
+  type: ProductType;
   size: {
     [size in keyof typeof productSize]: number; // size and price..
   };
-  type: ProductType;
-  asset?: string;
+  status: ProductStatus;
+  asset?: ImageFile;
+  timestamp: number;
 };
 
 export type Order = {
@@ -66,9 +81,15 @@ export type ProductType = (typeof productType)[keyof typeof productType];
 
 export type ProductSize = keyof typeof productSize;
 
+export type ProductStatus = keyof typeof productStatus;
+
+export type ProductCategory = keyof typeof productCategory;
+
 export type OrderStatus = (typeof orderStatus)[keyof typeof orderStatus];
 
 export type Counter = {
   date: number;
   queueCount: number;
 };
+
+export type ImageFile = Pick<UploadedFileData, 'key' | 'appUrl'>;

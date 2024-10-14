@@ -43,7 +43,7 @@ export default function OrderSummaryDrawer({ order }: { order: Order }) {
             <div className="flex items-center justify-between pl-2 pr-3 pt-2">
               <div className="grid gap-3">
                 <DialogTitle>Order #{order.id}</DialogTitle>
-                <DialogDescription>Order of {order.customerName}</DialogDescription>
+                <DialogDescription>{order.customerName}</DialogDescription>
               </div>
               <div className="grid gap-2">
                 <Badge
@@ -83,7 +83,7 @@ export default function OrderSummaryDrawer({ order }: { order: Order }) {
           <div className="flex items-center justify-between">
             <div className="grid gap-2">
               <DrawerTitle>Order #{order.id}</DrawerTitle>
-              <DrawerDescription>Order of {order.customerName}</DrawerDescription>
+              <DrawerDescription>{order.customerName}</DrawerDescription>
             </div>
             <div className="grid gap-2">
               <Badge

@@ -1,4 +1,4 @@
-import { DocumentData, collection, getDocs, query } from '@firebase/firestore';
+import { DocumentData, collection, deleteDoc, getDocs, query } from '@firebase/firestore';
 import { addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 import { db } from './firebase';
@@ -48,6 +48,15 @@ export const updateCounter = async (counterValue: number) => {
     date: new Date().valueOf(),
     queueCount: counterValue,
   });
+};
+
+export const deleteDocument = async (path: string, pathSegments: string) => {
+  try {
+    const documentRef = doc(db, path, pathSegments);
+    await deleteDoc(documentRef);
+  } catch (e) {
+    console.error('Failed to delete document', e);
+  }
 };
 
 // still experimenting if I should add this into route handlers..

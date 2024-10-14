@@ -1,3 +1,4 @@
+import CustomDialog from '@/components/custom-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -7,7 +8,6 @@ import { cn } from '@/lib/utils';
 import React, { ReactNode } from 'react';
 import { toast } from 'sonner';
 
-import CancelDialog from './cancel-dialog';
 import OrderSummaryDrawer from './order-summary-drawer';
 
 type OrderCardProps = {
@@ -25,23 +25,32 @@ export default function OrderCard({ order }: OrderCardProps) {
     } catch (e) {
       toast.error('Failed to update the order. Please try again after sometime');
       console.error('Error occurred while updating the order', e);
+      toast.dismiss();
     }
   };
 
   const getCardContent: Record<OrderStatus, ReactNode> = {
     [orderStatus.ACTIVE]: (
       <>
-        <CancelDialog onCancel={() => handleOrderStatus(orderStatus.CANCELLED)} />
+        <CustomDialog
+          onApprove={() => handleOrderStatus(orderStatus.CANCELLED)}
+          dlgTitle="Confirm Order Cancellation"
+          dlgDesc="Are you sure you want to cancel your order? This action cannot be undone."
+          btnNoDesc="No, Keep My Order"
+          btnYesDesc="Yes, Cancel Order"
+        />
         <Button variant="default" onClick={() => handleOrderStatus(orderStatus.COMPLETED)}>
           Serve
         </Button>
       </>
     ),
     [orderStatus.CANCELLED]: (
-      <div className="text-xs text-muted-foreground">This order has been cancelled.</div>
+      <div className="pt-4 text-xs text-muted-foreground">This order has been cancelled.</div>
     ),
     [orderStatus.COMPLETED]: (
-      <div className="text-xs text-muted-foreground">This order has been completed and served.</div>
+      <div className="pt-4 text-xs text-muted-foreground">
+        This order has been completed and served.
+      </div>
     ),
   };
 

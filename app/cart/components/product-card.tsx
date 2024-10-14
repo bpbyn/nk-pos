@@ -34,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const [order, setOrder] = useState<OrderDetail>(initialState);
-  const [imgSrc, setImgSrc] = useState<string>(product.asset ?? 'placeholder.svg');
+  const [imgSrc, setImgSrc] = useState<string>(product.asset?.appUrl ?? '/placeholder.svg');
 
   const handleTabChange = (value: string) => {
     setOrder((orderDetail) => ({
@@ -57,7 +57,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <CardHeader className="flex h-full flex-col justify-between">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8">
           <Image
-            src={imgSrc}
+            src={imgSrc ? imgSrc : '/placeholder.svg'}
             alt={product.name}
             onError={() => setImgSrc('/placeholder.svg')}
             priority
@@ -98,8 +98,13 @@ export default function ProductCard({ product }: ProductCardProps) {
               value={order.quantity}
               onValueChange={handleStepperChange}
             />
-            <Button disabled={order.quantity < 1} onClick={() => addOrder(order)}>
-              <Plus className="mr-2 h-3 w-3" /> Add to Cart
+            <Button
+              onClick={() => {
+                if (order.quantity < 1) return;
+                addOrder(order);
+              }}
+            >
+              <Plus className="mr-2 h-3.5 w-3.5" /> Add to Cart
             </Button>
           </div>
         </CardContent>
