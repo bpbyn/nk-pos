@@ -20,6 +20,7 @@ type CustomDialogProps = {
   btnNoDesc?: string;
   btnYesVariant?: ButtonVariant;
   btnNoVariant?: ButtonVariant;
+  disabled?: boolean;
   onApprove: () => void;
   onDecline?: () => void;
 };
@@ -32,6 +33,7 @@ export default function CustomDialog({
   btnNoDesc,
   btnYesVariant = 'secondary',
   btnNoVariant = 'destructive',
+  disabled = false,
   onApprove,
   onDecline,
 }: CustomDialogProps) {
@@ -39,7 +41,9 @@ export default function CustomDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost">{btnTitle}</Button>
+        <Button variant="ghost" disabled={disabled}>
+          {btnTitle}
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

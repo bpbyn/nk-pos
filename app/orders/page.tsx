@@ -1,6 +1,7 @@
 'use client';
 
 import Shell from '@/components/shell';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { db } from '@/lib/firebase/firebase';
 import useOrderStore from '@/lib/store';
@@ -49,23 +50,56 @@ export default function Orders() {
             <TabsTrigger value="complete">Complete</TabsTrigger>
           </TabsList>
           <TabsContent value="all" className="mt-2 grid gap-2 md:grid-cols-3 md:gap-4">
-            {orders.map((order, i) => (
-              <OrderCard key={`orderCardAll-${i}`} order={order} />
-            ))}
+            {orders.length > 0 ? (
+              orders.map((order, i) => <OrderCard key={`orderCardAll-${i}`} order={order} />)
+            ) : (
+              <Card className="col-span-3">
+                <CardHeader>
+                  <CardTitle className="text-center text-lg font-bold tracking-tight">
+                    You have no items here.
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    You can start selling as soon as you add it in the Products Tab.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            )}
           </TabsContent>
           <TabsContent value="active" className="mt-0 grid gap-2 md:grid-cols-3 md:gap-4">
-            {orders
-              .filter((order) => order.status === orderStatus.ACTIVE)
-              .map((order, i) => (
-                <OrderCard key={`orderCardActive-${i}`} order={order} />
-              ))}
+            {orders.filter((order) => order.status === orderStatus.ACTIVE).length > 0 ? (
+              orders
+                .filter((order) => order.status === orderStatus.ACTIVE)
+                .map((order, i) => <OrderCard key={`orderCardActive-${i}`} order={order} />)
+            ) : (
+              <Card className="col-span-3">
+                <CardHeader>
+                  <CardTitle className="text-center text-lg font-bold tracking-tight">
+                    You have no items here.
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    You can start selling as soon as you add it in the Products Tab.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            )}
           </TabsContent>
           <TabsContent value="complete" className="mt-0 grid gap-2 md:grid-cols-3 md:gap-4">
-            {orders
-              .filter((order) => order.status === orderStatus.COMPLETED)
-              .map((order, i) => (
-                <OrderCard key={`orderCardComplete-${i}`} order={order} />
-              ))}
+            {orders.filter((order) => order.status === orderStatus.COMPLETED).length > 0 ? (
+              orders
+                .filter((order) => order.status === orderStatus.COMPLETED)
+                .map((order, i) => <OrderCard key={`orderCardComplete-${i}`} order={order} />)
+            ) : (
+              <Card className="col-span-3">
+                <CardHeader>
+                  <CardTitle className="text-center text-lg font-bold tracking-tight">
+                    You have no items here.
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    You can start selling as soon as you add it in the Products Tab.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </div>

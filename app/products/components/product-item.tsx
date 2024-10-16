@@ -9,18 +9,43 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { TableCell, TableRow } from '@/components/ui/table';
+import { deleteDocument } from '@/lib/firebase/service';
+import useOrderStore from '@/lib/store';
 import { Product, productStatus, productType } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { cn, dateFormatter } from '@/lib/utils';
 import { MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 type ProductItemProps = {
   product: Product;
 };
 
 export default function ProductItem({ product }: ProductItemProps) {
-  const [imgSrc, setImgSrc] = useState<string>(product.asset?.appUrl ?? '/placeholder.svg');
+  const [imgSrc, setImgSrc] = useState<string>('/placeholder.svg');
+  const router = useRouter();
+
+  const handleDeleteProduct = async () => {
+    toast.loading('Deleting product... Please wait.');
+    try {
+      await deleteDocument('products', product.id);
+      toast.success('Product successfully deleted.');
+      toast.dismiss();
+      useOrderStore.getState().getProducts('products');
+    } catch (e) {
+      toast.error('Failed to delete product. Please try again after sometime');
+      console.error('Failed to delete product', e);
+      toast.dismiss();
+    }
+  };
+
+  useEffect(() => {
+    if (product) {
+      setImgSrc(product.asset?.appUrl ?? '/placeholder.svg');
+    }
+  }, [product]);
 
   return (
     <TableRow>
@@ -71,7 +96,9 @@ export default function ProductItem({ product }: ProductItemProps) {
           </div>
         </div>
       </TableCell>
-      <TableCell className="hidden md:table-cell">2023-07-12 10:42 AM</TableCell>
+      <TableCell className="hidden md:table-cell">
+        {dateFormatter().format(product.timestamp).split(',').join('')}
+      </TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -82,8 +109,10 @@ export default function ProductItem({ product }: ProductItemProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => ''}>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push(`products/edit/${product.id}`)}>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDeleteProduct}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>

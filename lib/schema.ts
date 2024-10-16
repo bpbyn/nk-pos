@@ -12,9 +12,12 @@ export const productSchema = z.object({
     .min(10, 'Description should be at least 10 characters')
     .optional()
     .or(z.literal('')),
-  category: z.nativeEnum(productCategory),
-  type: z.nativeEnum(productType),
-
+  category: z.nativeEnum(productCategory, {
+    errorMap: () => ({ message: 'Please select a category.' }),
+  }),
+  type: z.nativeEnum(productType, {
+    errorMap: () => ({ message: 'Please select a type.' }),
+  }),
   size: z.object({
     regular: z.coerce
       .number({
@@ -22,7 +25,7 @@ export const productSchema = z.object({
         invalid_type_error: 'Price must be a number',
       })
       .int()
-      .positive({ message: 'Price is required for regular price drinks' }),
+      .positive({ message: 'Price is required for regular drinks' }),
     large: z.coerce
       .number({
         required_error: 'Price is required',
@@ -44,10 +47,15 @@ export const productSchema = z.object({
   //   )
   //   .optional()
   //   .nullable(),
-  status: z.string().default(productStatus.active),
+  status: z
+    .string({
+      message: 'Status is required',
+    })
+    .default(productStatus.active),
   asset: z
     .object({
       key: z.string().optional(),
+      name: z.string().optional(),
       appUrl: z.string().optional(),
     })
     .optional(),

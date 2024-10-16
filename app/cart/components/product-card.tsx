@@ -8,7 +8,7 @@ import useOrderStore from '@/lib/store';
 import { OrderDetail, Product, ProductSize, productSize } from '@/lib/types';
 import { Plus } from 'lucide-react';
 import Image from 'next/image';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import ProductStepper from './product-stepper';
 
@@ -24,6 +24,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     () => orderDetails.find((o) => o.productId === product.id),
     [orderDetails, product.id]
   );
+
+  useEffect(() => {
+    if (product) {
+      setImgSrc(product.asset?.appUrl ?? '/placeholder.svg');
+    }
+  }, [product]);
 
   const initialState = {
     productId: product.id,

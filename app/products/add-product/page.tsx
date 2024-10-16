@@ -13,7 +13,7 @@ export default function AddProduct() {
   const router = useRouter();
   return (
     <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-      <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+      <div className="grid flex-1 auto-rows-max gap-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => router.back()}>
             <ChevronLeft className="h-4 w-4" />

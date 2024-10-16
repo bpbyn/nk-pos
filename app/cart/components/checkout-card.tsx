@@ -82,7 +82,7 @@ export default function CheckoutCard({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="col-span-1 grid h-fit">
         <Card className={cn('flex flex-col overflow-hidden lg:col-span-1', className)}>
           <CardHeader className="flex flex-col bg-muted/50 py-4">
             <CardTitle className="flex w-full items-center justify-between">
@@ -174,9 +174,10 @@ export default function CheckoutCard({
           </CardContent>
           <CardFooter className="flex flex-row items-center justify-between border-t bg-muted/50 px-6 py-3">
             <div className="text-xs text-muted-foreground">
-              Created on: <time dateTime="2024-09-20">September 20, 2024 </time>
+              Created on: <time>{new Intl.DateTimeFormat('en-US').format(new Date())}</time>
             </div>
             <div className="text-xs text-muted-foreground">
+              {/* @TODO */}
               Cashier: <b>Joco</b>
             </div>
           </CardFooter>

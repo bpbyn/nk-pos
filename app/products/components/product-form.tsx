@@ -1,4 +1,6 @@
-import { submitForm } from '@/app/actions/form';
+'use client';
+
+import { addSubmitForm, editSubmitForm } from '@/app/actions/form';
 import { deleteUTFiles } from '@/app/actions/remove-image';
 import CustomDialog from '@/components/custom-dialog';
 import { Button } from '@/components/ui/button';
@@ -32,6 +34,7 @@ import { ProductSchema, productSchema } from '@/lib/schema';
 import useOrderStore from '@/lib/store';
 import {
   ImageFile,
+  Product,
   ProductSize,
   productCategory,
   productSize,
@@ -42,14 +45,18 @@ import { UploadButton } from '@/lib/uploadthing/uploadthing';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-export default function ProductForm() {
+type ProductFormProps = {
+  product?: Product;
+};
+
+export default function ProductForm({ product }: ProductFormProps) {
   const router = useRouter();
-  const [preview, setPreview] = useState<ImageFile | undefined>();
+  const [preview, setPreview] = useState<ImageFile | undefined>(undefined);
   const [size, setSize] = useState<ProductSize>('regular');
 
   const form = useForm<z.infer<typeof productSchema>>({
@@ -66,11 +73,19 @@ export default function ProductForm() {
       status: productStatus.active.toLocaleLowerCase(),
       asset: {
         key: '',
+        name: '',
         appUrl: '',
       },
     },
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    form.reset(product);
+    setPreview(product?.asset);
+  }, [form, product]);
+
+  const isEdit = useMemo(() => (product ? true : false), [product]);
 
   const removeImage = async () => {
     toast.loading('Deleting image... Please wait.');
@@ -80,7 +95,7 @@ export default function ProductForm() {
       await deleteUTFiles([imgSrc.key]);
       toast.success('Image deleted.');
       setPreview(undefined);
-      form.setValue('asset', {}, { shouldValidate: true });
+      form.setValue('asset', {}, { shouldValidate: true, shouldDirty: true });
       toast.dismiss();
     } catch (e) {
       toast.error('Failed to delete image. Please try again after sometime');
@@ -93,18 +108,12 @@ export default function ProductForm() {
     if (form.formState.isDirty) {
       form.reset();
     }
-
-    // if (form.getValues('id')) {
-    //   deleteDocument
-    // }
-    // console.log(form.getValues())
-
     router.back();
   };
 
   const onSubmit: SubmitHandler<ProductSchema> = async (values) => {
     try {
-      toast.loading('Adding new product... Please wait.');
+      toast.loading(`${isEdit ? 'Editing' : 'Adding new'}  product... Please wait.`);
 
       if (values.size.large === 0) {
         delete values.size.large;
@@ -119,15 +128,25 @@ export default function ProductForm() {
       formData.append('asset', JSON.stringify(values.asset));
       formData.append('status', values.status);
 
-      await submitForm(formData);
+      if (isEdit && product) {
+        await editSubmitForm(formData, product.id);
+      } else {
+        await addSubmitForm(formData);
+      }
 
-      toast.success('Product successfully.');
+      toast.success(`Product successfully ${isEdit ? 'edited' : 'added'}.`);
       toast.dismiss();
 
       useOrderStore.getState().getProducts('products');
+
+      if (isEdit) {
+        router.back();
+      } else {
+        form.reset(undefined, { keepDirtyValues: true });
+      }
     } catch (e) {
-      toast.error('Failed to add product. Please try again after sometime');
-      console.error('Failed to add product', e);
+      toast.error(`Failed to ${isEdit ? 'edit' : 'add'} product. Please try again after sometime`);
+      console.error(`Failed to ${isEdit ? 'edit' : 'add'} product`, e);
       toast.dismiss();
     }
   };
@@ -191,9 +210,10 @@ export default function ProductForm() {
             <Card>
               <CardHeader>
                 <CardTitle>Product Category</CardTitle>
+                <CardDescription>{`Select whether the product you're adding falls into the categories.`}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-6 sm:grid-cols-3">
+                <div className="grid gap-6">
                   <div className="grid gap-3">
                     <FormField
                       control={form.control}
@@ -202,7 +222,10 @@ export default function ProductForm() {
                         <FormItem>
                           <FormLabel htmlFor="category">Category</FormLabel>
                           <FormControl>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value ?? form.watch('category')}
+                            >
                               <SelectTrigger id="category" aria-label="Select category">
                                 <SelectValue placeholder="Select category" />
                               </SelectTrigger>
@@ -243,7 +266,10 @@ export default function ProductForm() {
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  value={field.value ?? form.watch('type')}
+                                >
                                   <SelectTrigger id="productType" aria-label="Select product type">
                                     <SelectValue />
                                   </SelectTrigger>
@@ -337,7 +363,7 @@ export default function ProductForm() {
                     alt="Product image"
                     className="aspect-square w-full rounded-md object-cover"
                     height="300"
-                    src={preview?.appUrl ?? '/placeholder.svg'}
+                    src={preview?.appUrl ? preview?.appUrl : '/placeholder.svg'}
                     width="300"
                     priority
                     onError={(e) => console.error(e)}
@@ -348,7 +374,7 @@ export default function ProductForm() {
                     accept="image/*"
                     className="hidden"
                   />
-                  {!preview && (
+                  {!preview?.appUrl && (
                     <UploadButton
                       className="mt-4 ut-button:!h-auto ut-button:w-fit ut-button:bg-primary ut-button:px-4 ut-button:py-2 ut-button:text-sm ut-button:font-medium ut-button:text-primary-foreground ut-button:after:bg-green-500 ut-button:focus-within:ring-0 ut-button:focus-within:ring-offset-0 ut-allowed-content:hidden"
                       endpoint="imageUploader"
@@ -358,9 +384,10 @@ export default function ProductForm() {
                         const resImg: ImageFile = {
                           key: res[0].key,
                           appUrl: res[0].appUrl,
+                          name: res[0].name,
                         };
                         setPreview(resImg);
-                        form.setValue('asset', resImg);
+                        form.setValue('asset', resImg, { shouldDirty: true });
                       }}
                       onUploadError={(error: Error) => {
                         toast.error('Failed to upload image. Please try again after sometime');
@@ -370,9 +397,9 @@ export default function ProductForm() {
                   )}
                 </div>
 
-                {preview && (
+                {preview?.appUrl && (
                   <div className="grid gap-2">
-                    <Button variant="destructive" onClick={removeImage}>
+                    <Button type="button" variant="destructive" onClick={removeImage}>
                       Remove
                     </Button>
                   </div>
@@ -384,6 +411,9 @@ export default function ProductForm() {
             <Card>
               <CardHeader>
                 <CardTitle>Product Status</CardTitle>
+                <CardDescription>
+                  Choose the product status to determine its availability.
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-6">
@@ -407,7 +437,8 @@ export default function ProductForm() {
                           <FormControl>
                             <Select
                               onValueChange={field.onChange}
-                              defaultValue={productStatus.active.toLocaleLowerCase()}
+                              value={field.value ?? form.watch('status')}
+                              // defaultValue={field.value ?? productStatus.active.toLocaleLowerCase()}
                             >
                               <SelectTrigger id="productStatus" aria-label="Select product status">
                                 <SelectValue />
@@ -434,13 +465,14 @@ export default function ProductForm() {
         </div>
         <div className="flex items-center justify-center gap-4 pt-4 md:justify-center md:pt-8">
           <CustomDialog
+            disabled={!form.formState.isDirty}
             onApprove={handleDiscard}
             dlgTitle="Confirm Product Cancellation"
-            dlgDesc="Are you sure you want to discard this product? This action cannot be undone."
-            btnNoDesc="No, Keep Product"
-            btnYesDesc="Yes, Discard Product"
+            dlgDesc="Are you sure you want to discard your changes to this product? This action cannot be undone."
+            btnNoDesc="No, Keep Changes"
+            btnYesDesc="Yes, Discard Changes"
           />
-          <Button type="submit">Save Product</Button>
+          <Button type="submit">{`${isEdit ? 'Edit' : 'Save'} Product`}</Button>
         </div>
       </form>
     </Form>

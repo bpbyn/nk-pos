@@ -25,3 +25,19 @@ export const filterProducts = (products: Product[], product: ProductType) =>
 
 export const findProduct = <T, K extends keyof T>(products: T[], key: K, value: T[K]) =>
   products.find((product) => product[key] === value);
+
+export const dateFormatter = (
+  locales?: Intl.LocalesArgument,
+  options?: Intl.DateTimeFormatOptions
+) => {
+  const localesInput = locales ?? 'en-US';
+  const optionsInput = options ?? {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  };
+  return new Intl.DateTimeFormat(localesInput, optionsInput);
+};
