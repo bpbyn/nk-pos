@@ -43,7 +43,7 @@ export default function ProductItem({ product }: ProductItemProps) {
 
   useEffect(() => {
     if (product) {
-      setImgSrc(product.asset?.appUrl ?? '/placeholder.svg');
+      setImgSrc(product.asset?.url ?? '/placeholder.svg');
     }
   }, [product]);
 
@@ -53,9 +53,10 @@ export default function ProductItem({ product }: ProductItemProps) {
         <Image
           alt={product.name}
           className="aspect-auto rounded-md object-contain"
-          height="64"
           src={imgSrc ? imgSrc : '/placeholder.svg'}
-          width="64"
+          height={64}
+          width={150}
+          style={{ height: 'auto', width: 'auto' }}
           priority
           onError={() => setImgSrc('/placeholder.svg')}
         />

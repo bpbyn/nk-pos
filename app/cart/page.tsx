@@ -49,7 +49,7 @@ export default function Cart() {
                     <Input
                       type="search"
                       placeholder="Search..."
-                      className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[300px]"
+                      className="w-full rounded-lg bg-background pl-8 text-base placeholder:text-sm md:w-[200px] md:text-sm lg:w-[300px]"
                       onChange={(e) => setSearchTerm(e.target.value.toLocaleLowerCase())}
                     />
                   </div>

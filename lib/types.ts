@@ -92,4 +92,4 @@ export type Counter = {
   queueCount: number;
 };
 
-export type ImageFile = Pick<UploadedFileData, 'key' | 'appUrl' | 'name'>;
+export type ImageFile = Pick<UploadedFileData, 'key' | 'url' | 'name'>;

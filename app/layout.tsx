@@ -27,11 +27,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         // className={cn('antialiased', inter.className, vollkorn.className, josefinSans.className)}
-        className={cn('flex min-h-svh w-full flex-col bg-muted/30 antialiased', inter.className)}
+        className={cn('grid min-h-svh w-full bg-muted/30 antialiased', inter.className)}
       >
         <Providers>
           <SideNav />
-          <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+          <div className="grid grid-rows-[auto,1fr] sm:gap-4 sm:py-4 sm:pl-14">
             <MainNav />
             {children}
           </div>

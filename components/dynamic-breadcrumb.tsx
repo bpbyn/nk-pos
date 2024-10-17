@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Fragment } from 'react';
 
 import {
   Breadcrumb,
@@ -20,7 +21,7 @@ export default function DynamicBreadcrumb() {
     .filter((path) => path.length < 15);
 
   return (
-    <Breadcrumb className="hidden md:flex">
+    <Breadcrumb className="hidden pl-1 md:flex">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
@@ -32,9 +33,9 @@ export default function DynamicBreadcrumb() {
           const formattedPath = path.replace(/-/g, ' ');
           const href = `/${pathNames.slice(0, i + 1).join('/')}`;
           return (
-            <>
+            <Fragment key={`breadcrumb-container-${i}`}>
               {pathNames.length === i + 1 ? (
-                <BreadcrumbItem>
+                <BreadcrumbItem key={`breadcrumb-${i}`}>
                   <BreadcrumbPage className="capitalize">{formattedPath}</BreadcrumbPage>
                 </BreadcrumbItem>
               ) : (
@@ -47,7 +48,7 @@ export default function DynamicBreadcrumb() {
               {pathNames.length !== i + 1 && (
                 <BreadcrumbSeparator key={`breadcrumb-separator-${i}`} />
               )}
-            </>
+            </Fragment>
           );
         })}
       </BreadcrumbList>

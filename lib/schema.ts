@@ -56,7 +56,7 @@ export const productSchema = z.object({
     .object({
       key: z.string().optional(),
       name: z.string().optional(),
-      appUrl: z.string().optional(),
+      url: z.string().optional(),
     })
     .optional(),
 });

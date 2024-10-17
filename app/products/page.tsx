@@ -117,7 +117,7 @@ export default function Products() {
                       <Input
                         type="search"
                         placeholder="Search..."
-                        className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+                        className="w-full rounded-lg bg-background pl-8 text-base placeholder:text-sm md:w-[200px] md:text-sm lg:w-[320px]"
                         onChange={(e) => setSearchTerm(e.target.value.toLocaleLowerCase())}
                       />
                     </div>
@@ -169,18 +169,6 @@ export default function Products() {
                   </CardFooter>
                 )}
               </Card>
-              {/* ) : (
-                <Card className="col-span-3">
-                  <CardHeader>
-                    <CardTitle className="text-center text-lg font-bold tracking-tight">
-                      You have no items here.
-                    </CardTitle>
-                    <CardDescription className="text-center">
-                      Add a new item in the Products Tab.
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              )} */}
             </TabsContent>
           );
         })}

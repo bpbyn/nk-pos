@@ -27,7 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   useEffect(() => {
     if (product) {
-      setImgSrc(product.asset?.appUrl ?? '/placeholder.svg');
+      setImgSrc(product.asset?.url ?? '/placeholder.svg');
     }
   }, [product]);
 
@@ -40,7 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const [order, setOrder] = useState<OrderDetail>(initialState);
-  const [imgSrc, setImgSrc] = useState<string>(product.asset?.appUrl ?? '/placeholder.svg');
+  const [imgSrc, setImgSrc] = useState<string>(product.asset?.url ?? '/placeholder.svg');
 
   const handleTabChange = (value: string) => {
     setOrder((orderDetail) => ({
