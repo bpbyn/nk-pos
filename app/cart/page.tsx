@@ -4,7 +4,7 @@ import Shell from '@/components/shell';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ProductType, productType } from '@/lib/types';
+import { ProductType, productType, productTypeLabels } from '@/lib/types';
 import { Search } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -61,9 +61,3 @@ export default function Cart() {
     </Shell>
   );
 }
-
-export const productTypeLabels: Record<ProductType, string> = {
-  hot: 'Hot Drinks',
-  cold: 'Cold Drinks',
-  snack: 'Snacks',
-};

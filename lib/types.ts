@@ -29,6 +29,12 @@ export const productType = {
   snack: 'snack',
 } as const;
 
+export const productTypeLabels: Record<ProductType, string> = {
+  hot: 'Hot Drinks',
+  cold: 'Cold Drinks',
+  snack: 'Snacks',
+};
+
 export const productSize = {
   regular: 'Regular',
   large: 'Large',

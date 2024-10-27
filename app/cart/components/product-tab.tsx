@@ -3,10 +3,9 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TabsContent } from '@/components/ui/tabs';
 import useOrderStore from '@/lib/store';
-import { ProductType } from '@/lib/types';
+import { ProductType, productTypeLabels } from '@/lib/types';
 import React, { useMemo } from 'react';
 
-import { productTypeLabels } from '../page';
 import ProductCard from './product-card';
 
 type ProductTabProps = {
