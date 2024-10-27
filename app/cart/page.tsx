@@ -16,19 +16,13 @@ export default function Cart() {
   const [searchTerm, setSearchTerm] = useState('');
   const [productTab, setProductTab] = useState<ProductType>(productType.cold);
 
-  const productTypeLabels: Record<ProductType, string> = {
-    hot: 'Hot Drinks',
-    cold: 'Cold Drinks',
-    snack: 'Snacks',
-  };
-
   return (
     <Shell>
       <Tabs
         defaultValue={productType.cold}
         onValueChange={(value) => setProductTab(value as ProductType)}
       >
-        <TabsList className="mb-2 hidden md:inline-block">
+        <TabsList className="mb-2 md:inline-block">
           {Object.keys(productTypeLabels).map((value, i) => (
             <TabsTrigger key={`tabs-trigger-${i}`} value={value}>
               {productTypeLabels[value as keyof typeof productTypeLabels]}
@@ -38,9 +32,9 @@ export default function Cart() {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="col-span-1 lg:col-span-2">
             <Card className="lg:col-span-1">
-              <CardHeader className="flex flex-row items-center justify-between py-4">
-                <div className="hidden md:flex md:flex-col">
-                  <CardTitle className="text-xl font-bold">Menu</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between px-6 py-2">
+                <div className="hidden py-4 md:flex md:flex-col">
+                  <CardTitle className="text-3xl font-bold tracking-tight">Menu</CardTitle>
                   <CardDescription>Select customer&apos;s order below.</CardDescription>
                 </div>
                 <div className="flex w-full gap-2 md:w-auto lg:gap-0">
@@ -67,3 +61,9 @@ export default function Cart() {
     </Shell>
   );
 }
+
+export const productTypeLabels: Record<ProductType, string> = {
+  hot: 'Hot Drinks',
+  cold: 'Cold Drinks',
+  snack: 'Snacks',
+};

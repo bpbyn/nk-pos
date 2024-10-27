@@ -11,7 +11,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { Package2, PanelLeft, Search } from 'lucide-react';
+import { PanelLeft, Search } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
@@ -42,10 +43,23 @@ export default function MainNav() {
 
           <nav className="grid gap-6 text-lg font-medium">
             <Link
-              href="#"
-              className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+              href="/"
+              className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary p-1 text-lg font-semibold text-primary-foreground md:text-base"
             >
-              <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
+              <Image
+                src={'/nk_black.png'}
+                alt="nk logo"
+                width={48}
+                height={48}
+                className="hidden transition-all group-hover:scale-110 dark:block"
+              />
+              <Image
+                src={'/nk_white.png'}
+                alt="nk logo"
+                width={48}
+                height={48}
+                className="block transition-all group-hover:scale-110 dark:hidden"
+              />
               <span className="sr-only">Northern Kaffeine</span>
             </Link>
             {navigationList.map(({ label, route, asset }, i) => (

@@ -1,10 +1,12 @@
 'use client';
 
-import { TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { TabsContent } from '@/components/ui/tabs';
 import useOrderStore from '@/lib/store';
 import { ProductType } from '@/lib/types';
 import React, { useMemo } from 'react';
 
+import { productTypeLabels } from '../page';
 import ProductCard from './product-card';
 
 type ProductTabProps = {
@@ -27,13 +29,6 @@ export default function ProductTab({ searchTerm, productTab }: ProductTabProps) 
 
   return (
     <div>
-      <TabsList className="flex justify-center md:hidden">
-        {Object.keys(productTypeLabels).map((value, i) => (
-          <TabsTrigger key={`tabs-trigger-${i}`} value={value}>
-            {productTypeLabels[value as keyof typeof productTypeLabels]}
-          </TabsTrigger>
-        ))}
-      </TabsList>
       {(Object.keys(productTypeLabels) as Array<ProductType>).map((value, i) => (
         <TabsContent key={`tabs-content-${i}`} value={value}>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -42,14 +37,16 @@ export default function ProductTab({ searchTerm, productTab }: ProductTabProps) 
                 <ProductCard product={product} key={`${product}-${i}`} />
               ))
             ) : (
-              <div className="self-end justify-self-center md:col-span-2">
-                <div className="p-4 text-center md:p-8">
-                  <h3 className="text-lg font-bold tracking-tight">You have no items here.</h3>
-                  <p className="text-sm text-muted-foreground">
+              <Card className="col-span-3 border-none shadow-none md:border-solid">
+                <CardHeader>
+                  <CardTitle className="text-center text-lg font-bold tracking-tight">
+                    You have no items here.
+                  </CardTitle>
+                  <CardDescription className="text-center">
                     You can start selling as soon as you add it in the Products Tab.
-                  </p>
-                </div>
-              </div>
+                  </CardDescription>
+                </CardHeader>
+              </Card>
             )}
           </div>
         </TabsContent>
@@ -57,9 +54,3 @@ export default function ProductTab({ searchTerm, productTab }: ProductTabProps) 
     </div>
   );
 }
-
-export const productTypeLabels: Record<ProductType, string> = {
-  hot: 'Hot Drinks',
-  cold: 'Cold Drinks',
-  snack: 'Snacks',
-};

@@ -108,7 +108,7 @@ export default function Products() {
               <Card>
                 <CardHeader className="flex-row items-center justify-between px-6 py-2 md:p-6">
                   <div className="hidden md:flex md:flex-col">
-                    <CardTitle className="text-xl">Products</CardTitle>
+                    <CardTitle className="text-3xl font-bold tracking-tight">Products</CardTitle>
                     <CardDescription>Manage your products here.</CardDescription>
                   </div>
                   <div className="flex w-full gap-2 md:w-auto">
@@ -148,7 +148,7 @@ export default function Products() {
                       </TableBody>
                     </Table>
                   ) : (
-                    <Card className="col-span-3 mt-2">
+                    <Card className="col-span-3 mt-2 border-none shadow-none md:border-solid">
                       <CardHeader>
                         <CardTitle className="text-center text-lg font-bold tracking-tight">
                           You have no items here.

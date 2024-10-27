@@ -103,7 +103,7 @@ export default function CheckoutCard({
                       <Input
                         type="name"
                         placeholder="Enter customer name..."
-                        className="w-full text-base"
+                        className="w-full text-base placeholder:text-sm"
                         {...field}
                       />
                     </FormControl>
@@ -164,7 +164,7 @@ export default function CheckoutCard({
                 </ul>
               </div>
             ) : (
-              <div className="grid place-items-center">
+              <div className="grid place-items-center pb-6">
                 <h3 className="text-lg font-bold tracking-tight">You have no orders.</h3>
                 <p className="text-xs text-muted-foreground">
                   Stay prepared for the next customer.

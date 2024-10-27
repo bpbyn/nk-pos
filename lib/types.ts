@@ -77,6 +77,11 @@ export type OrderDetail = {
   type: Product['type'];
 };
 
+export type ProductSizeAnalytics = {
+  cups: Product['size'] & { total: number };
+  total: Product['size'] & { total: number };
+};
+
 export type ProductType = (typeof productType)[keyof typeof productType];
 
 export type ProductSize = keyof typeof productSize;
