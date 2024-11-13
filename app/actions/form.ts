@@ -47,7 +47,7 @@ export const editSubmitForm = async (formData: FormData, id: Product['id']) => {
     const { success, data: doc } = parsedData;
 
     if (success) {
-      await updateDocument('products', id, doc);
+      await updateDocument('products', id, { ...doc, timestamp: new Date().valueOf() });
     }
   } catch (e) {
     console.error(e);

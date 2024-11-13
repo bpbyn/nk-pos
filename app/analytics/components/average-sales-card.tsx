@@ -7,147 +7,134 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 import React from 'react';
 import { Bar, BarChart, Label, Rectangle, ReferenceLine, XAxis } from 'recharts';
 
 type AverageSalesCardProps = {
   className?: React.ComponentProps<'div'>['className'];
+  salesPerDate: Array<{ date: string; sales: number }>;
 };
 
-export default function AverageSalesCard({ className }: AverageSalesCardProps) {
+export default function AverageSalesCard({ className, salesPerDate }: AverageSalesCardProps) {
+  const totalSales = salesPerDate.reduce((total, { sales }) => total + sales, 0);
+  const averageSales = Math.round(totalSales / salesPerDate.length);
+
   return (
     <Card className={cn('', className)}>
-      <CardHeader className="space-y-0 pb-2">
-        <CardDescription>Today</CardDescription>
-        <CardTitle className="text-4xl tabular-nums">
-          ₱12,584{' '}
-          <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-            sales
-          </span>
-        </CardTitle>
-      </CardHeader>
+      {averageSales ? (
+        <CardHeader className="space-y-0 pb-2">
+          <CardDescription>Total Sales</CardDescription>
+          <CardTitle className="text-4xl tabular-nums">₱{totalSales}</CardTitle>
+        </CardHeader>
+      ) : (
+        <div className="space-y-2 p-6 pb-2">
+          <Skeleton className="h-4 w-28" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+      )}
       <CardContent>
-        <ChartContainer
-          config={{
-            steps: {
-              label: 'Steps',
-              color: 'hsl(var(--chart-1))',
-            },
-          }}
-        >
-          <BarChart
-            accessibilityLayer
-            margin={{
-              left: -4,
-              right: -4,
+        {averageSales ? (
+          <ChartContainer
+            config={{
+              sales: {
+                label: 'Sales',
+                color: 'hsl(var(--chart-1))',
+              },
             }}
-            data={[
-              {
-                date: '2024-01-01',
-                steps: 2000,
-              },
-              {
-                date: '2024-01-02',
-                steps: 2100,
-              },
-              {
-                date: '2024-01-03',
-                steps: 2200,
-              },
-              {
-                date: '2024-01-04',
-                steps: 1300,
-              },
-              {
-                date: '2024-01-05',
-                steps: 1400,
-              },
-              {
-                date: '2024-01-06',
-                steps: 2500,
-              },
-              {
-                date: '2024-01-07',
-                steps: 1600,
-              },
-            ]}
           >
-            <Bar
-              dataKey="steps"
-              fill="var(--color-steps)"
-              radius={5}
-              fillOpacity={0.4}
-              activeBar={<Rectangle fillOpacity={0.8} />}
-              shape={(props: any) => {
-                return (
-                  <Rectangle
-                    {...props}
-                    fillOpacity={props.payload.date === '2024-01-03' ? 1 : 0.2}
-                  />
-                );
+            <BarChart
+              accessibilityLayer
+              margin={{
+                left: -4,
+                right: -4,
               }}
-            />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={4}
-              tickFormatter={(value) => {
-                return new Date(value).toLocaleDateString('en-US', {
-                  weekday: 'short',
-                });
-              }}
-            />
-            <ChartTooltip
-              defaultIndex={2}
-              content={
-                <ChartTooltipContent
-                  hideIndicator
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString('en-US', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    });
-                  }}
-                />
-              }
-              cursor={false}
-            />
-            <ReferenceLine
-              y={1200}
-              stroke="hsl(var(--muted-foreground))"
-              strokeDasharray="3 3"
-              strokeWidth={1}
+              data={salesPerDate}
             >
-              <Label
-                position="insideBottomLeft"
-                value="Average Sales"
-                offset={10}
-                fill="hsl(var(--foreground))"
+              <Bar
+                dataKey="sales"
+                fill="var(--color-sales)"
+                radius={5}
+                fillOpacity={0.4}
+                activeBar={<Rectangle fillOpacity={0.8} />}
+                shape={(props: any) => {
+                  const currentDate = format(new Date(), 'yyyy-MM-dd');
+                  return (
+                    <Rectangle
+                      {...props}
+                      fillOpacity={props.payload.date === currentDate ? 1 : 0.2}
+                    />
+                  );
+                }}
               />
-              <Label
-                position="insideTopLeft"
-                value="12,343"
-                className="text-lg"
-                fill="hsl(var(--foreground))"
-                offset={10}
-                startOffset={100}
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={4}
+                tickFormatter={(value) => {
+                  return new Date(value).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                  });
+                }}
               />
-            </ReferenceLine>
-          </BarChart>
-        </ChartContainer>
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    hideIndicator
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString('en-US', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      });
+                    }}
+                  />
+                }
+                cursor={false}
+              />
+              <ReferenceLine
+                y={1200}
+                stroke="hsl(var(--muted-foreground))"
+                strokeDasharray="3 3"
+                strokeWidth={1}
+              >
+                <Label
+                  position="insideBottomLeft"
+                  value="Average Sales"
+                  offset={10}
+                  fill="hsl(var(--foreground))"
+                />
+                <Label
+                  position="insideTopLeft"
+                  value={`₱${averageSales}`}
+                  className="text-lg"
+                  fill="hsl(var(--foreground))"
+                  offset={10}
+                  startOffset={100}
+                />
+              </ReferenceLine>
+            </BarChart>
+          </ChartContainer>
+        ) : (
+          <div>
+            <Skeleton className="h-28 w-full" />
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex-col items-start gap-1">
-        <CardDescription>
-          Over the past 7 days, you have walked{' '}
-          <span className="font-medium text-foreground">53,305</span> steps.
-        </CardDescription>
-        <CardDescription>
-          You need <span className="font-medium text-foreground">12,584</span> more steps to reach
-          your goal.
-        </CardDescription>
+        {averageSales ? (
+          <CardDescription>
+            Over the past {salesPerDate.length} days that you&apos;ve open your store, you&apos;ve
+            gained <span className="font-medium text-foreground">₱{totalSales}</span> of sales.
+          </CardDescription>
+        ) : (
+          <div className="w-full">
+            <Skeleton className="h-14" />
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

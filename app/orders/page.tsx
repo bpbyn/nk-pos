@@ -7,6 +7,7 @@ import { db } from '@/lib/firebase/firebase';
 import useOrderStore from '@/lib/store';
 import { Order, orderStatus } from '@/lib/types';
 import { DocumentData, collection, onSnapshot, query, where } from '@firebase/firestore';
+import { startOfDay } from 'date-fns';
 import React, { useEffect } from 'react';
 
 import OrderCard from './components/order-card';
@@ -16,9 +17,9 @@ export default function Orders() {
 
   useEffect(() => {
     const orderCollectionRef = collection(db, 'orders');
-    const startOfDay = new Date(new Date().setHours(0, 0, 0, 0)).valueOf();
+    const startDay = startOfDay(new Date()).valueOf();
 
-    const q = query(orderCollectionRef, where('timestamp', '>', startOfDay));
+    const q = query(orderCollectionRef, where('timestamp', '>', startDay));
     const unsubscribe = onSnapshot(q, (snapshots) => {
       const fetchedOrders = snapshots.docs
         .map((doc: DocumentData) => {

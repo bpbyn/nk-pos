@@ -135,7 +135,7 @@ export default function Products() {
                           <TableHead className="hidden md:table-cell">Status</TableHead>
                           <TableHead>Type</TableHead>
                           <TableHead className="hidden md:table-cell">Price</TableHead>
-                          <TableHead className="hidden md:table-cell">Created at</TableHead>
+                          <TableHead className="hidden md:table-cell">Updated at</TableHead>
                           <TableHead>
                             <span className="sr-only">Actions</span>
                           </TableHead>

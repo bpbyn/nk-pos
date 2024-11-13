@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 type AnalyticsCardProps = {
   title: string;
   icon: ReactNode;
-  value: string;
+  value: string | number;
   valueDescription: string;
 };
 

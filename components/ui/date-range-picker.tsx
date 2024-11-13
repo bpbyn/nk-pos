@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from '@radix-ui/react-icons';
-import { addDays, format } from 'date-fns';
+import { addDays, format, isAfter, sub } from 'date-fns';
 import * as React from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -10,32 +10,49 @@ import { Button } from './button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
-export function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2023, 0, 20),
-    to: addDays(new Date(2023, 0, 20), 20),
+export function CalendarDateRangePicker({
+  className,
+  date,
+  onDateChange,
+}: {
+  className?: React.HTMLAttributes<HTMLDivElement>;
+  date?: DateRange;
+  onDateChange: (value?: DateRange) => void;
+}) {
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: date?.from,
+    to: date?.to,
   });
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleSelect = React.useCallback((selectedDateRange: DateRange | undefined) => {
+    if (selectedDateRange?.from && selectedDateRange?.to) {
+      setIsOpen(false);
+    }
+    setDateRange(selectedDateRange);
+    onDateChange(selectedDateRange);
+  }, []);
 
   return (
     <div className={cn('grid gap-2', className)}>
-      <Popover>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant={'outline'}
             className={cn(
               'w-[260px] justify-start text-left font-normal',
-              !date && 'text-muted-foreground'
+              !dateRange && 'text-muted-foreground'
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
+            {dateRange?.from ? (
+              dateRange.to ? (
                 <>
-                  {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
+                  {format(dateRange.from, 'LLL dd, y')} - {format(dateRange.to, 'LLL dd, y')}
                 </>
               ) : (
-                format(date.from, 'LLL dd, y')
+                format(dateRange.from, 'LLL dd, y')
               )
             ) : (
               <span>Pick a date</span>
@@ -46,10 +63,11 @@ export function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTML
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
+            defaultMonth={dateRange?.from}
+            selected={dateRange}
+            onSelect={handleSelect}
             numberOfMonths={2}
+            disabled={(date) => isAfter(date, new Date())}
           />
         </PopoverContent>
       </Popover>
