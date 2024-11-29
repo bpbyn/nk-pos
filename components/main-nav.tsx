@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Sheet, // SheetClose,
   SheetContent,
@@ -10,21 +9,41 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import useAuth from '@/hooks/use-auth';
+import { publicRoutes } from '@/lib/routes';
+import useOrderStore from '@/lib/store';
+import { userRole } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { PanelLeft, Search } from 'lucide-react';
+import { CircleUser, LogOut, PanelLeft, Settings, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 
+import CommandMenu from './command-menu';
 import DynamicBreadcrumb from './dynamic-breadcrumb';
 import { ModeToggle } from './mode-toggle';
 import { navigationList } from './side-nav';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 
 export default function MainNav() {
   const currentPath = usePathname();
   const [openSheet, setOpenSheet] = useState(false);
+  const { user, logOut } = useAuth();
+  const userSignIn = useOrderStore((state) => state.user);
+
+  const filteredNavList =
+    userSignIn?.role === userRole.user
+      ? navigationList.filter((nav) => publicRoutes.includes(nav.route))
+      : navigationList;
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -43,7 +62,7 @@ export default function MainNav() {
 
           <nav className="grid gap-6 text-lg font-medium">
             <Link
-              href="/"
+              href={'/'}
               className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary p-1 text-lg font-semibold text-primary-foreground md:text-base"
             >
               <Image
@@ -62,7 +81,7 @@ export default function MainNav() {
               />
               <span className="sr-only">Northern Kaffeine</span>
             </Link>
-            {navigationList.map(({ label, route, asset }, i) => (
+            {filteredNavList.map(({ label, route, asset }, i) => (
               <Link
                 key={`navlist-mobile-${i}`}
                 href={route}
@@ -81,26 +100,57 @@ export default function MainNav() {
       </Sheet>
       <DynamicBreadcrumb />
       <div className="relative ml-auto flex-1 md:grow-0">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        {/* <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
           placeholder="Search..."
           className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-        />
+        /> */}
+        <CommandMenu />
       </div>
       <ModeToggle />
-      <>
-        <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" width={50} height={50} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-        {/* <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn> */}
-      </>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
+            <Avatar>
+              {user?.photoURL ? (
+                <AvatarImage
+                  src={user?.photoURL ?? ''}
+                  alt="photoURL"
+                  className="overflow-hidden rounded-full"
+                  width={36}
+                  height={36}
+                />
+              ) : (
+                <AvatarFallback>
+                  <CircleUser className="h-5 w-5" />
+                </AvatarFallback>
+              )}
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>
+            <div>{user?.displayName}</div>
+            <div className="text-xs font-normal text-muted-foreground">{user?.email}</div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="space-x-2" disabled>
+            <User className="h-4 w-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="space-x-2" disabled>
+            <Settings className="h-4 w-4" />
+            <span>Settings</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem className="space-x-2" onClick={logOut}>
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </header>
   );
 }

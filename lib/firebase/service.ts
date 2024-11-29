@@ -11,8 +11,6 @@ export const getDocuments = async (collectionName: string) => {
   docSnapshots.forEach((doc) => {
     documents.push(doc.data());
   });
-  // console.log(Timestamp.now().toMillis())
-  // documents.push({ id: doc.id, ...doc.data() });
 
   return documents;
 };
@@ -63,7 +61,7 @@ export const deleteDocument = async (path: string, pathSegments: string) => {
 // export const placeOrder = async (order: Order, queueCount: number) => {
 //   try {
 //     await updateCounter(queueCount);
-//     await addDoc(collection(db, 'orders'), order);
+//     await addDoc(collection(db, 'ordersV2'), order);
 //   } catch (e) {
 //     console.error('Place order failed', e);
 //   }

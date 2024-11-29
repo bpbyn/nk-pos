@@ -45,6 +45,11 @@ export const productStatus = {
   inactive: 'Inactive',
 } as const;
 
+export const userRole = {
+  user: 'user',
+  admin: 'admin',
+} as const;
+
 export type NavigationList = {
   label: string;
   route: string;
@@ -93,6 +98,8 @@ export type ProductCategory = keyof typeof productCategory;
 
 export type OrderStatus = (typeof orderStatus)[keyof typeof orderStatus];
 
+export type UserRole = keyof typeof userRole;
+
 export type Counter = {
   date: number;
   queueCount: number;
@@ -101,7 +108,6 @@ export type Counter = {
 export type ImageFile = Pick<UploadedFileData, 'key' | 'url' | 'name'>;
 
 // ANALYTICS
-
 export type ProductSizeAnalytics = {
   cups: Product['size'] & { total: number };
   total: Product['size'] & { total: number };
@@ -109,4 +115,14 @@ export type ProductSizeAnalytics = {
 
 export type CupsAnalytics = {
   [size in ProductSize | 'total']: number;
+};
+
+// USER
+
+export type User = {
+  userId: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
 };

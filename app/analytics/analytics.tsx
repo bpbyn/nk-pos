@@ -12,6 +12,10 @@ export const calculateTotalCups = (orders: Order[]) => {
   }, 0);
 };
 
+export const calculateTotalDrinks = (orderDetails: OrderDetail[]) => {
+  return orderDetails.reduce((sum, item) => sum + item.quantity, 0);
+};
+
 export const calculateAverageDailyCups = (totalCups: number, totalSalesPeriodDays: number) => {
   return Math.round(totalCups / totalSalesPeriodDays);
 };

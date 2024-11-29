@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import useAuth from '@/hooks/use-auth';
 import { addDocument, updateCounter } from '@/lib/firebase/service';
 import useOrderStore from '@/lib/store';
 import { Order, Product, orderStatus } from '@/lib/types';
@@ -29,6 +30,8 @@ export default function CheckoutCard({
   onCheckout?: () => void;
   className?: string;
 }) {
+  const { user } = useAuth();
+
   const orderDetails = useOrderStore((state) => state.orderDetails);
   const { queueCount } = useOrderStore((state) => state.queueCount);
   const products = useOrderStore((state) => state.products);
@@ -177,8 +180,7 @@ export default function CheckoutCard({
               Created on: <time>{new Intl.DateTimeFormat('en-US').format(new Date())}</time>
             </div>
             <div className="text-xs text-muted-foreground">
-              {/* @TODO */}
-              Cashier: <b>Joco</b>
+              Cashier: <b>{user?.displayName?.split(' ')[0] ?? 'Cashier User'}</b>
             </div>
           </CardFooter>
         </Card>

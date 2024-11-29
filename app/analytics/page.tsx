@@ -11,8 +11,8 @@ import { db } from '@/lib/firebase/firebase';
 import { Order, ProductType, orderStatus, productType } from '@/lib/types';
 import { endOfDay, startOfDay, sub } from 'date-fns';
 import { DocumentData, collection, onSnapshot, query, where } from 'firebase/firestore';
-import { ChartSpline, CupSoda, File, PhilippinePeso, SquarePen } from 'lucide-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import { File } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
 import AnalyticsCard from './components/analytics-card';
@@ -31,48 +31,16 @@ export default function Analytics() {
   });
 
   const {
-    totalSales,
     totalSalesPerDate,
     totalCups,
     totalDailyCupsSold,
     totalCupsPerSize,
-    totalOrders,
-    totalAverageDailyCups,
     groupedProductTypes,
+    analyticsCard,
   } = useAnalytics(orders, tabProductType);
 
-  const analyticsCard = useMemo(
-    () => [
-      {
-        title: 'Total Sales',
-        icon: <PhilippinePeso className="h-4 w-4 text-muted-foreground" />,
-        value: `₱${totalSales}`,
-        valueDescription: 'Total revenue generated',
-      },
-      {
-        title: 'Total Cups',
-        icon: <CupSoda className="h-4 w-4 text-muted-foreground" />,
-        value: totalCups,
-        valueDescription: 'Total cups sold to date',
-      },
-      {
-        title: 'Average Daily Cups',
-        icon: <ChartSpline className="h-4 w-4 text-muted-foreground" />,
-        value: totalAverageDailyCups || 0,
-        valueDescription: 'Average cups sold per day',
-      },
-      {
-        title: 'Total Orders',
-        icon: <SquarePen className="h-4 w-4 text-muted-foreground" />,
-        value: totalOrders,
-        valueDescription: 'Total orders processed',
-      },
-    ],
-    [totalAverageDailyCups, totalCups, totalOrders, totalSales]
-  );
-
   useEffect(() => {
-    const orderCollectionRef = collection(db, 'orders');
+    const orderCollectionRef = collection(db, 'ordersV2');
     if (date?.from && date.to) {
       const q = query(
         orderCollectionRef,

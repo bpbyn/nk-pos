@@ -1,26 +1,18 @@
 'use client';
 
 import Shell from '@/components/shell';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { db } from '@/lib/firebase/firebase';
 import useOrderStore from '@/lib/store';
-import { Order, orderStatus } from '@/lib/types';
-import { cn, dateFormatter } from '@/lib/utils';
+import { Order } from '@/lib/types';
 import { DocumentData, collection, onSnapshot, query, where } from '@firebase/firestore';
 import { startOfDay } from 'date-fns';
 import { File } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+
+import CustomersTable from './components/customers-table';
 
 export default function Customers() {
   const orders = useOrderStore((state) => state.orders);
@@ -108,52 +100,13 @@ export default function Customers() {
                 <CardHeader className="flex-row items-center justify-between px-6 py-2 md:p-6">
                   <div className="hidden md:flex md:flex-col">
                     <CardTitle className="text-3xl font-bold tracking-tight">Customers</CardTitle>
-                    <CardDescription>Recent orders by customers on your store.</CardDescription>
+                    <CardDescription>Recent customers who bought from your store.</CardDescription>
                   </div>
                   {/* INSERT SEARCH FN HERE IF NEEDED */}
                 </CardHeader>
                 <CardContent>
                   {orders.length > 0 ? (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="">Customer</TableHead>
-                          <TableHead className="md:table-cell">Amount</TableHead>
-                          <TableHead className="hidden md:table-cell">Date</TableHead>
-                          <TableHead className="md:table-cell">Status</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {orders.map((order, i) => {
-                          return (
-                            <TableRow key={`customer-item-${i}`}>
-                              <TableCell className="font-medium">{order.customerName}</TableCell>
-                              <TableCell>₱{order.totalPrice}</TableCell>
-                              <TableCell className="hidden md:block">
-                                {dateFormatter().format(order.timestamp).split(',').join('')}
-                              </TableCell>
-                              <TableCell>
-                                {
-                                  <Badge
-                                    variant="secondary"
-                                    className={cn(
-                                      order.status === orderStatus.ACTIVE &&
-                                        'bg-green-100/50 capitalize text-green-500 dark:bg-green-900/50 dark:text-green-300',
-                                      order.status === orderStatus.COMPLETED &&
-                                        'bg-blue-100/50 capitalize text-blue-500 dark:bg-blue-900/50 dark:text-blue-300',
-                                      order.status === orderStatus.CANCELLED &&
-                                        'bg-red-100/50 capitalize text-red-500 dark:bg-red-900/50 dark:text-red-300'
-                                    )}
-                                  >
-                                    {order.status}
-                                  </Badge>
-                                }
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
+                    <CustomersTable orders={orders} />
                   ) : (
                     <Card className="col-span-3 mt-2 border-none shadow-none md:border-solid">
                       <CardHeader>

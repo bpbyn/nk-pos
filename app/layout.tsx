@@ -1,5 +1,3 @@
-import MainNav from '@/components/main-nav';
-import SideNav from '@/components/side-nav';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import Providers from '@/providers/providers';
@@ -7,6 +5,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
+import ProtectedLayout from './protected-layout';
 
 const inter = Inter({ subsets: ['latin'] });
 // const vollkorn = Vollkorn({ subsets: ['latin'] });
@@ -30,11 +29,7 @@ export default function RootLayout({
         className={cn('grid min-h-svh w-full bg-muted/30 antialiased', inter.className)}
       >
         <Providers>
-          <SideNav />
-          <div className="grid grid-rows-[auto,1fr] sm:gap-4 sm:py-4 sm:pl-14">
-            <MainNav />
-            {children}
-          </div>
+          <ProtectedLayout>{children}</ProtectedLayout>
         </Providers>
         <Toaster />
       </body>

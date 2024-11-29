@@ -9,6 +9,7 @@ import {
   calculateTotalSales,
 } from '@/app/analytics/analytics';
 import { CupsAnalytics, Order, ProductSize, ProductType, productSize } from '@/lib/types';
+import { ChartSpline, CupSoda, PhilippinePeso, SquarePen } from 'lucide-react';
 import { useMemo } from 'react';
 
 export function useAnalytics(orders: Order[], type: ProductType) {
@@ -72,6 +73,36 @@ export function useAnalytics(orders: Order[], type: ProductType) {
 
   const groupedProductTypes = useMemo(() => calculateProductTypes(orders, type), [orders, type]);
 
+  const analyticsCard = useMemo(
+    () => [
+      {
+        title: 'Total Sales',
+        icon: <PhilippinePeso className="h-4 w-4 text-muted-foreground" />,
+        value: `₱${totalSales}`,
+        valueDescription: 'Total revenue generated',
+      },
+      {
+        title: 'Total Cups',
+        icon: <CupSoda className="h-4 w-4 text-muted-foreground" />,
+        value: totalCups,
+        valueDescription: 'Total cups sold to date',
+      },
+      {
+        title: 'Average Daily Cups',
+        icon: <ChartSpline className="h-4 w-4 text-muted-foreground" />,
+        value: totalAverageDailyCups || 0,
+        valueDescription: 'Average cups sold per day',
+      },
+      {
+        title: 'Total Orders',
+        icon: <SquarePen className="h-4 w-4 text-muted-foreground" />,
+        value: totalOrders,
+        valueDescription: 'Total orders processed',
+      },
+    ],
+    [totalAverageDailyCups, totalCups, totalOrders, totalSales]
+  );
+
   return {
     totalSales,
     totalSalesPerDate,
@@ -81,5 +112,6 @@ export function useAnalytics(orders: Order[], type: ProductType) {
     totalAverageDailyCups,
     totalCupsPerSize,
     groupedProductTypes,
+    analyticsCard,
   };
 }

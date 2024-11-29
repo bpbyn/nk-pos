@@ -1,7 +1,9 @@
 'use client';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { NavigationList } from '@/lib/types';
+import { publicRoutes } from '@/lib/routes';
+import useOrderStore from '@/lib/store';
+import { NavigationList, userRole } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Inbox, LineChart, ListChecks, Package, Settings, ShoppingBag, Users2 } from 'lucide-react';
@@ -12,12 +14,18 @@ import React from 'react';
 
 export default function SideNav() {
   const currentPath = usePathname();
+  const userSignIn = useOrderStore((state) => state.user);
+
+  const filteredNavList =
+    userSignIn?.role === userRole.user
+      ? navigationList.filter((nav) => publicRoutes.includes(nav.route))
+      : navigationList;
 
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 py-4">
         <Link
-          href="/"
+          href={'/'}
           className="group flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary p-1 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
           <Image
@@ -37,7 +45,7 @@ export default function SideNav() {
           <span className="sr-only">Northern Kaffeine</span>
         </Link>
         <TooltipProvider>
-          {navigationList.map(({ label, route, asset }, i) => (
+          {filteredNavList.map(({ label, route, asset }, i) => (
             <Tooltip key={`navlist-${i}`}>
               <TooltipTrigger asChild>
                 <Link

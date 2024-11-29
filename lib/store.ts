@@ -4,7 +4,7 @@ import { devtools, persist } from 'zustand/middleware';
 
 import { updateCounter } from './firebase/service';
 // import { db } from './firebase/firebase';
-import { Counter, Order, OrderDetail, Product, ProductSize } from './types';
+import { Counter, Order, OrderDetail, Product, ProductSize, User } from './types';
 import { millisToDate } from './utils';
 
 type State = {
@@ -12,6 +12,7 @@ type State = {
   orderDetails: OrderDetail[];
   products: Product[];
   queueCount: Counter;
+  user: User | undefined;
 };
 
 type Actions = {
@@ -24,7 +25,7 @@ type Actions = {
   getQueueCount: (collectionName: string, documentId: string) => void;
 };
 
-const initialState: Omit<State, 'products' | 'queueCount'> = {
+const initialState: Omit<State, 'products' | 'queueCount' | 'user'> = {
   orders: [],
   orderDetails: [],
 };
@@ -40,6 +41,7 @@ const useOrderStore = create<State & Actions>()(
           date: 0,
           queueCount: 0,
         },
+        user: undefined,
         addOrder: (newOrder: OrderDetail) => {
           const orderIndex = get().orderDetails.findIndex(
             (order) => order.productId === newOrder.productId && order.size === newOrder.size
