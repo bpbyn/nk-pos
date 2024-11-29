@@ -68,7 +68,7 @@ export default function CheckoutCard({
         totalPrice,
       };
 
-      await addDocument('orders', order);
+      await addDocument('ordersV2', order);
       await updateCounter(newQueueCount);
       addQueueCount();
 

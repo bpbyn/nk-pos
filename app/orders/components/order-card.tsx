@@ -19,7 +19,7 @@ export default function OrderCard({ order }: OrderCardProps) {
     if (!order.orderId) return;
     try {
       toast.loading('Updating order status... Please wait.');
-      await updateDocument('orders', order.orderId, { status: status });
+      await updateDocument('ordersV2', order.orderId, { status: status });
       toast.success('Order status successfully updated!');
       toast.dismiss();
     } catch (e) {

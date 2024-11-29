@@ -16,7 +16,7 @@ export default function Orders() {
   const orders = useOrderStore((state) => state.orders);
 
   useEffect(() => {
-    const orderCollectionRef = collection(db, 'orders');
+    const orderCollectionRef = collection(db, 'ordersV2');
     const startDay = startOfDay(new Date()).valueOf();
 
     const q = query(orderCollectionRef, where('timestamp', '>', startDay));

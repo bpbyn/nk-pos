@@ -20,7 +20,7 @@ export default function Customers() {
   const [customerTab, setCustomerTab] = useState<(typeof tabList)[number]>(tabList[0]);
 
   useEffect(() => {
-    const orderCollectionRef = collection(db, 'orders');
+    const orderCollectionRef = collection(db, 'ordersV2');
     const startDay = startOfDay(new Date()).valueOf();
 
     const q = query(orderCollectionRef, where('timestamp', '>', startDay));
