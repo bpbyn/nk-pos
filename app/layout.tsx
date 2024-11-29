@@ -8,9 +8,6 @@ import './globals.css';
 import ProtectedLayout from './protected-layout';
 
 const inter = Inter({ subsets: ['latin'] });
-// const vollkorn = Vollkorn({ subsets: ['latin'] });
-// const josefinSans = Josefin_Sans({ subsets: ['latin'] });
-// const urbanist = Urbanist({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Northern Kaffeine POS',
