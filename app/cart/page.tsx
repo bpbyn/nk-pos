@@ -50,7 +50,7 @@ export default function Cart() {
                   <CheckoutDrawer />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="h-[calc(100vh-210px)] overflow-y-auto md:h-auto">
                 <ProductTab searchTerm={searchTerm.toLocaleLowerCase()} productTab={productTab} />
               </CardContent>
             </Card>
