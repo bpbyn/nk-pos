@@ -15,6 +15,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Northern Kaffeine POS',
   description: 'A point of sale system for Norther Kaffeine',
+  icons: {
+    icon: '/nk_white.ico',
+  },
 };
 
 export default function RootLayout({
