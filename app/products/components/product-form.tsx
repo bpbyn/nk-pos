@@ -113,10 +113,6 @@ export default function ProductForm({ product }: ProductFormProps) {
       if (!form.formState.isDirty) return;
       toast.loading(`${isEdit ? 'Saving' : 'Adding new'}  product... Please wait.`);
 
-      if (values.size.large === 0) {
-        delete values.size.large;
-      }
-
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('description', values.description || '');

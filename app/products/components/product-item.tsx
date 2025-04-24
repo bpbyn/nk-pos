@@ -93,7 +93,7 @@ export default function ProductItem({ product }: ProductItemProps) {
           <div className="flex h-5 items-center space-x-4 text-sm">
             <div>₱{product.size.regular}</div>
             <Separator orientation="vertical" />
-            <div>{`${product.size.large ? `₱${product.size.large}` : `-`}`}</div>
+            <div>₱{product.size.large}</div>
           </div>
         </div>
       </TableCell>

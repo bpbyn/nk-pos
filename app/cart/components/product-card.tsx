@@ -83,13 +83,14 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <TabsTrigger
                   value="regular"
                   className="w-full data-[state=active]:bg-muted md:text-xs"
+                  disabled={product.size['regular'] === 0}
                 >
                   {productSize.regular}
                 </TabsTrigger>
                 <TabsTrigger
                   value="large"
                   className="w-full data-[state=active]:bg-muted md:text-xs"
-                  disabled={!product.size['large']}
+                  disabled={product.size['large'] === 0}
                 >
                   {productSize.large}
                 </TabsTrigger>

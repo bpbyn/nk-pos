@@ -21,18 +21,20 @@ export const productSchema = z.object({
   size: z.object({
     regular: z.coerce
       .number({
-        required_error: 'Price is required',
-        invalid_type_error: 'Price must be a number',
+        required_error: 'Price is required for regular drinks',
+        invalid_type_error: 'Price must be a number for regular drinks',
       })
       .int()
-      .positive({ message: 'Price is required for regular drinks' }),
+      .min(0, { message: 'Price must be at least 0 for regular drinks' }),
     large: z.coerce
       .number({
-        required_error: 'Price is required',
-        invalid_type_error: 'Price must be a number',
+        required_error: 'Price is required for large drinks',
+        invalid_type_error: 'Price must be a number for large drinks',
       })
-      .nullable()
-      .optional(),
+      .int()
+      .min(0, { message: 'Price must be at least 0 for large drinks' }),
+    // .nullable()
+    // .optional(),
   }),
   // size: z.string().default(productSize.regular),
   // image: z
