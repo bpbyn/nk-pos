@@ -17,13 +17,19 @@ export default function ProductTab({ searchTerm, productTab }: ProductTabProps) 
   const products = useOrderStore((state) => state.products);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      return (
-        (product.name.toLocaleLowerCase().includes(searchTerm ?? product.name) ||
-          product.type.toLocaleLowerCase().includes(searchTerm ?? product.type)) &&
-        product.type === productTab
-      );
-    });
+    return products
+      .filter((product) => {
+        return (
+          (product.name
+            .toLocaleLowerCase()
+            .includes(searchTerm?.toLocaleLowerCase() ?? product.name) ||
+            product.type
+              .toLocaleLowerCase()
+              .includes(searchTerm?.toLocaleLowerCase() ?? product.type)) &&
+          product.type === productTab
+        );
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [productTab, products, searchTerm]);
 
   return (
@@ -33,7 +39,7 @@ export default function ProductTab({ searchTerm, productTab }: ProductTabProps) 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {filteredProducts.length > 0 ? (
               [...filteredProducts].map((product, i) => (
-                <ProductCard product={product} key={`${product}-${i}`} />
+                <ProductCard product={product} key={`${product.id}-${i}`} />
               ))
             ) : (
               <Card className="col-span-3 border-none shadow-none md:border-solid">

@@ -67,7 +67,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             onError={() => setImgSrc('/placeholder.svg')}
             priority
-            className="aspect-auto w-full rounded-md object-cover"
+            className="aspect-[4/5] w-full rounded-md object-cover"
             width="300"
             height="300"
           />
