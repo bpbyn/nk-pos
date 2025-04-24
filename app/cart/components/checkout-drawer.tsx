@@ -19,8 +19,16 @@ import CheckoutCard from './checkout-card';
 export default function CheckoutDrawer() {
   const orderDetails = useOrderStore((state) => state.orderDetails);
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const handleDrawerChange = (open: boolean) => {
+    setOpenDrawer(open);
+    if (open) {
+      useOrderStore.getState().getQueueCount('counter', 'queue');
+    }
+  };
+
   return (
-    <Drawer onOpenChange={() => setOpenDrawer(!openDrawer)} open={openDrawer}>
+    <Drawer onOpenChange={handleDrawerChange} open={openDrawer}>
       <DrawerTrigger asChild>
         <div className="relative">
           <Button size="icon" variant="outline" className="lg:hidden">
@@ -37,7 +45,7 @@ export default function CheckoutDrawer() {
           )}
         </div>
       </DrawerTrigger>
-      <DrawerContent className="px-4 pb-8">
+      <DrawerContent className="px-4 pb-4">
         <DrawerHeader>
           <DrawerTitle></DrawerTitle>
           <DrawerDescription></DrawerDescription>

@@ -116,7 +116,7 @@ export default function CheckoutCard({
               />
 
               {/* <Separator className="mt-1" /> */}
-              <ul className="grid max-h-[30rem] grid-cols-1 gap-3 overflow-y-auto">
+              <ul className="grid max-h-[20rem] grid-cols-1 gap-3 overflow-y-auto">
                 {orderDetails.map((orderDetail, i) => {
                   const product = findProduct<Product, keyof Product>(
                     products,
