@@ -56,7 +56,7 @@ export default function OrderCard({ order }: OrderCardProps) {
   };
 
   return (
-    <Card>
+    <Card className="grid place-content-between">
       <CardHeader className="pb-2">
         <>
           <div className="flex items-center justify-between gap-4">
