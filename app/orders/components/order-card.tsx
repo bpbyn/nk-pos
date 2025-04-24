@@ -9,6 +9,7 @@ import React, { ReactNode } from 'react';
 import { toast } from 'sonner';
 
 import OrderSummaryDrawer from './order-summary-drawer';
+import OrderTable from './order-table';
 
 type OrderCardProps = {
   order: Order;
@@ -57,27 +58,30 @@ export default function OrderCard({ order }: OrderCardProps) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h3 className="text-xl font-bold leading-none">{order.customerName}</h3>
-            <OrderSummaryDrawer order={order} />
+        <>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-xl font-bold leading-none">{order.customerName}</h3>
+              <OrderSummaryDrawer order={order} />
+            </div>
+            <div className="grid gap-2">
+              <Badge
+                variant="secondary"
+                className={cn(
+                  order.status === orderStatus.ACTIVE &&
+                    'bg-green-100/50 capitalize text-green-500 dark:bg-green-900/50 dark:text-green-300',
+                  order.status === orderStatus.COMPLETED &&
+                    'bg-blue-100/50 capitalize text-blue-500 dark:bg-blue-900/50 dark:text-blue-300',
+                  order.status === orderStatus.CANCELLED &&
+                    'bg-red-100/50 capitalize text-red-500 dark:bg-red-900/50 dark:text-red-300'
+                )}
+              >
+                {order.status}
+              </Badge>
+            </div>
           </div>
-          <div className="grid gap-2">
-            <Badge
-              variant="secondary"
-              className={cn(
-                order.status === orderStatus.ACTIVE &&
-                  'bg-green-100/50 capitalize text-green-500 dark:bg-green-900/50 dark:text-green-300',
-                order.status === orderStatus.COMPLETED &&
-                  'bg-blue-100/50 capitalize text-blue-500 dark:bg-blue-900/50 dark:text-blue-300',
-                order.status === orderStatus.CANCELLED &&
-                  'bg-red-100/50 capitalize text-red-500 dark:bg-red-900/50 dark:text-red-300'
-              )}
-            >
-              {order.status}
-            </Badge>
-          </div>
-        </div>
+          <OrderTable orderDetails={order.orders} />
+        </>
       </CardHeader>
       <CardContent className="flex items-center justify-between pr-6">
         {getCardContent[order.status]}
