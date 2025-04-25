@@ -70,8 +70,7 @@ export default function Orders() {
               {/* All Orders */}
               <TabsContent
                 value="all"
-                className="mt-2 grid grid-cols-[auto-fit] gap-2 md:gap-4"
-                style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}
+                className="mt-2 grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 md:gap-4"
               >
                 {allOrders.length > 0 ? (
                   allOrders.map((order, i) => <OrderCard key={`orderCardAll-${i}`} order={order} />)
@@ -92,8 +91,8 @@ export default function Orders() {
               {/* Active Orders */}
               <TabsContent
                 value="active"
-                className="mt-0 grid grid-cols-[auto-fit] gap-2 md:gap-4"
-                style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}
+                className="mt-0 grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 md:gap-4"
+                // style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}
               >
                 {activeOrders.length > 0 ? (
                   activeOrders.map((order, i) => (
@@ -116,8 +115,7 @@ export default function Orders() {
               {/* Completed Orders */}
               <TabsContent
                 value="complete"
-                className="mt-0 grid grid-cols-[auto-fit] gap-2 md:gap-4"
-                style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}
+                className="mt-0 grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 md:gap-4"
               >
                 {completedOrders.length > 0 ? (
                   completedOrders.map((order, i) => (
