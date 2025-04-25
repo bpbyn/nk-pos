@@ -60,6 +60,11 @@ const config: Config = withUt({
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [
+    tailwindcssAnimate,
+    function ({ addVariant }: { addVariant: (name: string, rule: string) => void }) {
+      addVariant('supports-hover', '@media (hover: hover)');
+    },
+  ],
 });
 export default config;
