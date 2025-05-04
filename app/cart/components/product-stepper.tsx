@@ -27,7 +27,9 @@ export default function ProductStepper({
     defaultValue: value,
     onChange: (val) => onValueChange(val),
   });
-  return (
+
+  return showDelete ? (
+    // Old Implementation (when showDelete is true)
     <div
       className={cn(`flex items-center justify-between`, className, showDelete ? 'gap-2' : 'gap-4')}
     >
@@ -67,6 +69,36 @@ export default function ProductStepper({
           <Trash2 className="h-3 w-3" />
         </Button>
       )}
+    </div>
+  ) : (
+    // New Implementation (when showDelete is false)
+    <div className={cn(`flex items-center justify-between rounded-xl border`, className, 'gap-4')}>
+      <Button
+        variant="ghost"
+        className="h-full w-full rounded-l-xl rounded-r-none border-none"
+        disabled={counter < 1}
+        size="icon"
+        onClick={(e) => {
+          e.preventDefault();
+          setCounter(counter - 1);
+        }}
+      >
+        <Minus className="h-3 w-3" />
+      </Button>
+      <div className="flex w-fit items-center justify-center py-2">
+        <span className="w-full text-center text-xs font-semibold md:text-inherit">{counter}</span>
+      </div>
+      <Button
+        variant="ghost"
+        className="h-full w-full rounded-l-none rounded-r-xl border-none"
+        size="icon"
+        onClick={(e) => {
+          e.preventDefault();
+          setCounter(counter + 1);
+        }}
+      >
+        <Plus className="h-3 w-3" />
+      </Button>
     </div>
   );
 }

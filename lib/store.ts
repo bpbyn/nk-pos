@@ -1,16 +1,24 @@
-// import { DocumentData, collection, getDocs, query } from '@firebase/firestore';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
 import { updateCounter } from './firebase/service';
-// import { db } from './firebase/firebase';
-import { Counter, Order, OrderDetail, Product, ProductSize, User } from './types';
+import {
+  Counter,
+  Extra,
+  Order,
+  OrderDetail,
+  OrderExtra,
+  Product,
+  ProductSize,
+  User,
+} from './types';
 import { millisToDate } from './utils';
 
 type State = {
   orders: Order[];
   orderDetails: OrderDetail[];
   products: Product[];
+  extras: Extra[];
   queueCount: Counter;
   user: User | undefined;
 };
@@ -18,14 +26,20 @@ type State = {
 type Actions = {
   addOrder: (newOrder: OrderDetail) => void;
   addQueueCount: () => void;
-  updateOrder: (id: Product['id'], size: ProductSize, productCost: number, value: number) => void;
+  updateOrder: (
+    id: Product['id'],
+    size: ProductSize,
+    productCost: number,
+    extras: OrderExtra[],
+    value: number
+  ) => void;
   removeOrder: (id: Product['id'], size: ProductSize) => void;
   clearOrder: () => void;
   getProducts: (collectionName: string) => void;
   getQueueCount: (collectionName: string, documentId: string) => void;
 };
 
-const initialState: Omit<State, 'products' | 'queueCount' | 'user'> = {
+const initialState: Omit<State, 'products' | 'extras' | 'queueCount' | 'user'> = {
   orders: [],
   orderDetails: [],
 };
@@ -37,6 +51,7 @@ const useOrderStore = create<State & Actions>()(
         orders: [],
         orderDetails: [],
         products: [],
+        extras: [],
         queueCount: {
           date: 0,
           queueCount: 0,
@@ -44,7 +59,10 @@ const useOrderStore = create<State & Actions>()(
         user: undefined,
         addOrder: (newOrder: OrderDetail) => {
           const orderIndex = get().orderDetails.findIndex(
-            (order) => order.productId === newOrder.productId && order.size === newOrder.size
+            (order) =>
+              order.productId === newOrder.productId &&
+              order.size === newOrder.size &&
+              JSON.stringify(order.extras || []) === JSON.stringify(newOrder.extras || [])
           );
           if (orderIndex > -1) {
             const currentOrders = [...get().orderDetails];
@@ -55,9 +73,11 @@ const useOrderStore = create<State & Actions>()(
             set((state) => ({ orderDetails: [...state.orderDetails, newOrder] }));
           }
         },
-        updateOrder: (id, size, productCost, value) => {
+        updateOrder: (id, size, productCost, extras, value) => {
           const updatedOrders = get().orderDetails.map((orderDetail) =>
-            orderDetail.productId === id && orderDetail.size === size
+            orderDetail.productId === id &&
+            orderDetail.size === size &&
+            JSON.stringify(orderDetail.extras || []) === JSON.stringify(extras || [])
               ? {
                   ...orderDetail,
                   quantity: value,
@@ -81,7 +101,7 @@ const useOrderStore = create<State & Actions>()(
           });
 
           const products = await response.json();
-          set({ products: products });
+          set({ [collectionName]: products });
         },
         getQueueCount: async (collectionName: string, documentId: string) => {
           const response = await fetch(
@@ -126,6 +146,7 @@ const useOrderStore = create<State & Actions>()(
 );
 
 useOrderStore.getState().getProducts('products');
+useOrderStore.getState().getProducts('extras');
 useOrderStore.getState().getQueueCount('counter', 'queue');
 
 export default useOrderStore;

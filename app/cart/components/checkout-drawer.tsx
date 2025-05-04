@@ -11,6 +11,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import useOrderStore from '@/lib/store';
+import { cn } from '@/lib/utils';
 import { ShoppingBag } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -31,8 +32,15 @@ export default function CheckoutDrawer() {
     <Drawer onOpenChange={handleDrawerChange} open={openDrawer}>
       <DrawerTrigger asChild>
         <div className="relative">
-          <Button size="icon" variant="outline" className="lg:hidden">
-            <ShoppingBag className="h-5 w-5" />
+          <Button
+            size="icon"
+            variant="ghost"
+            className={cn(
+              'border-none hover:text-orange-500 hover:dark:text-orange-300 lg:hidden',
+              orderDetails.length > 0 && 'bg-accent text-orange-500 dark:text-orange-300'
+            )}
+          >
+            <ShoppingBag className="h-4 w-4" />
             <span className="sr-only">Toggle Menu</span>
           </Button>
           {orderDetails.length > 0 && (
@@ -46,10 +54,9 @@ export default function CheckoutDrawer() {
         </div>
       </DrawerTrigger>
       <DrawerContent className="px-4 pb-4">
-        <DrawerHeader>
-          <DrawerTitle></DrawerTitle>
-          <DrawerDescription></DrawerDescription>
-        </DrawerHeader>
+        <DrawerTitle />
+        <DrawerDescription />
+        <DrawerHeader className="p-1" />
         <CheckoutCard onCheckout={() => setOpenDrawer(!openDrawer)} />
       </DrawerContent>
     </Drawer>

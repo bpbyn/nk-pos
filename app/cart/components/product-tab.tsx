@@ -3,7 +3,7 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TabsContent } from '@/components/ui/tabs';
 import useOrderStore from '@/lib/store';
-import { ProductType, productTypeLabels } from '@/lib/types';
+import { ProductType, productSubCategoryLabels } from '@/lib/types';
 import React, { useMemo } from 'react';
 
 import ProductCard from './product-card';
@@ -11,30 +11,29 @@ import ProductCard from './product-card';
 type ProductTabProps = {
   searchTerm?: string;
   productTab: string;
+  productTypeTab: ProductType[];
 };
 
-export default function ProductTab({ searchTerm, productTab }: ProductTabProps) {
+export default function ProductTab({ searchTerm, productTab, productTypeTab }: ProductTabProps) {
   const products = useOrderStore((state) => state.products);
 
   const filteredProducts = useMemo(() => {
     return products
       .filter((product) => {
-        return (
-          (product.name
-            .toLocaleLowerCase()
-            .includes(searchTerm?.toLocaleLowerCase() ?? product.name) ||
-            product.type
-              .toLocaleLowerCase()
-              .includes(searchTerm?.toLocaleLowerCase() ?? product.type)) &&
-          product.type === productTab
-        );
+        const matchesSearchTerm = product.name
+          .toLocaleLowerCase()
+          .includes(searchTerm?.toLocaleLowerCase() ?? product.name);
+        const matchesProductTab = product.subcategory === productTab;
+        const matchesProductType = productTypeTab.includes(product.type);
+
+        return matchesSearchTerm && matchesProductTab && matchesProductType;
       })
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [productTab, products, searchTerm]);
+  }, [productTab, products, searchTerm, productTypeTab]);
 
   return (
     <div>
-      {(Object.keys(productTypeLabels) as Array<ProductType>).map((value, i) => (
+      {(Object.keys(productSubCategoryLabels) as Array<ProductType>).map((value, i) => (
         <TabsContent key={`tabs-content-${i}`} value={value}>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {filteredProducts.length > 0 ? (

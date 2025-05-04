@@ -62,7 +62,7 @@ export default function OrderSummaryDrawer({ order }: { order: Order }) {
               </div>
             </div>
           </DialogHeader>
-          <OrderTable orderDetails={order.orders} />
+          <OrderTable order={order} />
         </DialogContent>
       </Dialog>
     );
@@ -102,7 +102,7 @@ export default function OrderSummaryDrawer({ order }: { order: Order }) {
             </div>
           </div>
         </DrawerHeader>
-        <OrderTable orderDetails={order.orders} />
+        <OrderTable order={order} />
       </DrawerContent>
     </Drawer>
   );

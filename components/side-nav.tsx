@@ -52,9 +52,11 @@ export default function SideNav() {
                   href={route}
                   className={cn(
                     'flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8',
-                    currentPath === route
+                    route === '/products' && currentPath.startsWith('/products')
                       ? 'bg-accent text-accent-foreground'
-                      : 'text-muted-foreground'
+                      : currentPath === route
+                        ? 'bg-accent text-accent-foreground'
+                        : 'text-muted-foreground'
                   )}
                 >
                   {asset}

@@ -23,7 +23,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import useOrderStore from '@/lib/store';
 import { ProductStatus, ProductType, productType } from '@/lib/types';
-import { File, ListFilter, PlusCircle, Search } from 'lucide-react';
+import { File, ListFilter, PackagePlus, PlusCircle, Search } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
 
@@ -90,7 +90,13 @@ export default function Products() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button size="sm" variant="outline" className="h-7 gap-1" disabled>
+            <Link href="/products/extras">
+              <Button size="sm" variant="outline" className="h-7 gap-1">
+                <PackagePlus className="h-3 w-3" />
+                <div className="text-xs font-medium text-muted-foreground">Extras</div>
+              </Button>
+            </Link>
+            <Button size="sm" variant="outline" className="hidden h-7 gap-1" disabled>
               <File className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
             </Button>

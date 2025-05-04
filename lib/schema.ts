@@ -5,6 +5,22 @@ import { productCategory, productStatus, productType } from './types';
 // const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB in bytes
 // const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
 
+export const extraSchema = z.object({
+  name: z.string().min(1, 'Name is required.'),
+  price: z.coerce
+    .number({
+      required_error: 'Price is required',
+      invalid_type_error: 'Price must be a number',
+    })
+    .refine((value) => !isNaN(value), { message: 'Price must be a valid number.' })
+    .refine((value) => value > 0, { message: 'Price must be greater than 0.' }),
+  status: z
+    .string({
+      message: 'Status is required',
+    })
+    .default(productStatus.active.toLocaleLowerCase()),
+});
+
 export const productSchema = z.object({
   name: z.string({ message: 'Name is required' }).min(3, 'Name should be at least 3 characters.'),
   description: z
@@ -15,6 +31,11 @@ export const productSchema = z.object({
   category: z.nativeEnum(productCategory, {
     errorMap: () => ({ message: 'Please select a category.' }),
   }),
+  subcategory: z
+    .string({
+      required_error: 'Subcategory is required',
+    })
+    .min(1, 'Subcategory is required'),
   type: z.nativeEnum(productType, {
     errorMap: () => ({ message: 'Please select a type.' }),
   }),
@@ -33,9 +54,15 @@ export const productSchema = z.object({
       })
       .int()
       .min(0, { message: 'Price must be at least 0 for large drinks' }),
-    // .nullable()
-    // .optional(),
   }),
+  extras: z
+    .array(
+      extraSchema.extend({
+        id: z.string().min(1, 'ID is required.'),
+      })
+    )
+    .optional(),
+
   // size: z.string().default(productSize.regular),
   // image: z
   //   .instanceof(File)
@@ -63,4 +90,5 @@ export const productSchema = z.object({
     .optional(),
 });
 
+export type ExtraSchema = z.infer<typeof extraSchema>;
 export type ProductSchema = z.infer<typeof productSchema>;

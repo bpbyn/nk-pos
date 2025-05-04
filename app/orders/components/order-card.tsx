@@ -57,7 +57,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
   return (
     <Card className="flex flex-col justify-between">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-0">
         <>
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -80,7 +80,7 @@ export default function OrderCard({ order }: OrderCardProps) {
               </Badge>
             </div>
           </div>
-          <OrderTable orderDetails={order.orders} />
+          <OrderTable order={order} />
         </>
       </CardHeader>
       <CardContent className="flex items-center justify-between pr-6 pt-6 md:pt-2">

@@ -22,7 +22,7 @@ export default function Orders() {
     const q = query(orderCollectionRef, where('timestamp', '>', startDay));
     const unsubscribe = onSnapshot(q, (snapshots) => {
       const fetchedOrders = snapshots.docs.map((doc: DocumentData) => {
-        const { customerName, timestamp, id, status, orders, totalPrice } = doc.data();
+        const { customerName, timestamp, id, status, orders, totalPrice, notes } = doc.data();
         const completeDoc: Order = {
           id,
           orderId: doc.id,
@@ -31,6 +31,7 @@ export default function Orders() {
           status,
           orders,
           totalPrice,
+          notes,
         };
         return completeDoc;
       });
@@ -70,7 +71,7 @@ export default function Orders() {
               {/* All Orders */}
               <TabsContent
                 value="all"
-                className="mt-2 grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 md:gap-4"
+                className="mt-2 grid grid-cols-[repeat(auto-fit,_minmax(300px,_max-content))] gap-2 md:gap-4"
               >
                 {allOrders.length > 0 ? (
                   allOrders.map((order, i) => <OrderCard key={`orderCardAll-${i}`} order={order} />)
@@ -91,8 +92,7 @@ export default function Orders() {
               {/* Active Orders */}
               <TabsContent
                 value="active"
-                className="mt-0 grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 md:gap-4"
-                // style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}
+                className="mt-0 grid grid-cols-[repeat(auto-fit,_minmax(300px,_max-content))] gap-2 md:gap-4"
               >
                 {activeOrders.length > 0 ? (
                   activeOrders.map((order, i) => (
@@ -115,7 +115,7 @@ export default function Orders() {
               {/* Completed Orders */}
               <TabsContent
                 value="complete"
-                className="mt-0 grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 md:gap-4"
+                className="mt-0 grid grid-cols-[repeat(auto-fit,_minmax(300px,_max-content))] gap-2 md:gap-4"
               >
                 {completedOrders.length > 0 ? (
                   completedOrders.map((order, i) => (

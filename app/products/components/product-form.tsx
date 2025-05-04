@@ -6,6 +6,7 @@ import CustomDialog from '@/components/custom-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -40,6 +41,7 @@ import {
   productCategory,
   productSize,
   productStatus,
+  productSubCategory,
   productType,
 } from '@/lib/types';
 import { UploadButton } from '@/lib/uploadthing/uploadthing';
@@ -59,6 +61,9 @@ type ProductFormProps = {
 
 export default function ProductForm({ product }: ProductFormProps) {
   const router = useRouter();
+  const extras = useOrderStore((state) => state.extras).toSorted((a, b) =>
+    a.name.localeCompare(b.name)
+  );
   const [preview, setPreview] = useState<ImageFile | undefined>(undefined);
   const [size, setSize] = useState<ProductSize>('regular');
   const [shouldOpen, setShouldOpen] = useState(false);
@@ -68,12 +73,14 @@ export default function ProductForm({ product }: ProductFormProps) {
     defaultValues: {
       name: '',
       description: '',
-      category: product?.category ?? productCategory.drinks,
+      category: product?.category,
+      subcategory: product?.subcategory ?? undefined,
       type: product?.type ?? productType.cold,
       size: {
         regular: 0,
         large: 0,
       },
+      extras: product?.extras ?? [],
       status: product?.status ?? productStatus.active.toLocaleLowerCase(),
       asset: {
         key: '',
@@ -83,6 +90,10 @@ export default function ProductForm({ product }: ProductFormProps) {
     },
     mode: 'onChange',
   });
+
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    form.getValues('category')
+  );
 
   useEffect(() => {
     form.reset(product);
@@ -117,8 +128,10 @@ export default function ProductForm({ product }: ProductFormProps) {
       formData.append('name', values.name);
       formData.append('description', values.description || '');
       formData.append('category', values.category);
+      formData.append('subcategory', values.subcategory);
       formData.append('type', values.type);
       formData.append('size', JSON.stringify(values.size));
+      formData.append('extras', JSON.stringify(values.extras));
       formData.append('asset', JSON.stringify(values.asset));
       formData.append('status', values.status);
 
@@ -253,7 +266,14 @@ export default function ProductForm({ product }: ProductFormProps) {
                           <FormItem>
                             <FormLabel htmlFor="category">Category</FormLabel>
                             <FormControl>
-                              <Select onValueChange={field.onChange} value={field.value}>
+                              <Select
+                                onValueChange={(value) => {
+                                  field.onChange(value);
+                                  setSelectedCategory(value);
+                                  form.setValue('subcategory', '');
+                                }}
+                                value={field.value ?? ''}
+                              >
                                 <SelectTrigger id="category" aria-label="Select category">
                                   <SelectValue placeholder="Select category" />
                                 </SelectTrigger>
@@ -267,6 +287,41 @@ export default function ProductForm({ product }: ProductFormProps) {
                           </FormItem>
                         )}
                       />
+                      {form.getValues('category') && (
+                        <FormField
+                          control={form.control}
+                          name="subcategory"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel htmlFor="subcategory">Subcategory</FormLabel>
+                              <FormControl>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                  <SelectTrigger id="subcategory" aria-label="Select subcategory">
+                                    <SelectValue placeholder="Select subcategory" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {selectedCategory === productCategory.drinks ? (
+                                      <>
+                                        <SelectItem value={productSubCategory.coffee}>
+                                          Coffee
+                                        </SelectItem>
+                                        <SelectItem value={productSubCategory.nonCoffee}>
+                                          Non-Coffee
+                                        </SelectItem>
+                                      </>
+                                    ) : (
+                                      <SelectItem value={productSubCategory.snack}>
+                                        Snack
+                                      </SelectItem>
+                                    )}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -360,6 +415,47 @@ export default function ProductForm({ product }: ProductFormProps) {
                       {form.formState.errors.size.large.message}
                     </p>
                   )}
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Product Extras</CardTitle>
+                  <CardDescription>
+                    Select extras / add-ons you want to add for this product.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    {extras.map((extra) => (
+                      <FormField
+                        key={extra.id}
+                        control={form.control}
+                        name="extras"
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="flex items-start space-x-2">
+                              <Checkbox
+                                checked={field.value?.some((f) => f.name === extra.name)}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? field.onChange([...(field.value || []), extra])
+                                    : field.onChange(
+                                        field.value?.filter((value) => value !== extra)
+                                      );
+                                }}
+                              />
+                              <FormLabel
+                                htmlFor={`extra-${extra.id}`}
+                                className="text-sm font-medium"
+                              >
+                                {extra.name} - ₱{extra.price.toFixed(2)}
+                              </FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             </div>

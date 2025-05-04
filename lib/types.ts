@@ -23,15 +23,25 @@ export const productCategory = {
   snacks: 'snacks',
 } as const;
 
-export const productType = {
-  hot: 'hot',
-  cold: 'cold',
+export const productSubCategory = {
+  coffee: 'coffee',
+  nonCoffee: 'nonCoffee',
   snack: 'snack',
 } as const;
 
+export const productType = {
+  hot: 'hot',
+  cold: 'cold',
+} as const;
+
 export const productTypeLabels: Record<ProductType, string> = {
-  hot: 'Hot Drinks',
-  cold: 'Cold Drinks',
+  hot: 'Hot',
+  cold: 'Cold',
+};
+
+export const productSubCategoryLabels: Record<ProductSubCategory, string> = {
+  coffee: 'Coffee',
+  nonCoffee: 'Non-Coffee',
   snack: 'Snacks',
 };
 
@@ -61,6 +71,7 @@ export type Product = {
   name: string;
   description?: string;
   category: ProductCategory;
+  subcategory: ProductSubCategory;
   type: ProductType;
   size: {
     [size in keyof typeof productSize]: number; // size and price..
@@ -68,6 +79,7 @@ export type Product = {
   status: ProductStatus;
   asset?: ImageFile;
   timestamp: number;
+  extras?: Extra[];
 };
 
 export type Order = {
@@ -78,6 +90,7 @@ export type Order = {
   status: OrderStatus;
   orders: OrderDetail[];
   totalPrice: number;
+  notes?: string;
 };
 
 export type OrderDetail = {
@@ -86,6 +99,21 @@ export type OrderDetail = {
   quantity: number;
   price: number;
   type: Product['type'];
+  extras?: OrderExtra[];
+};
+
+export type Extra = {
+  id: string;
+  name: string;
+  price: number;
+  status: ProductStatus;
+  timestamp: number;
+  asset?: ImageFile;
+};
+
+export type OrderExtra = {
+  extra: Extra;
+  quantity: number;
 };
 
 export type ProductType = (typeof productType)[keyof typeof productType];
@@ -95,6 +123,8 @@ export type ProductSize = keyof typeof productSize;
 export type ProductStatus = keyof typeof productStatus;
 
 export type ProductCategory = keyof typeof productCategory;
+
+export type ProductSubCategory = keyof typeof productSubCategory;
 
 export type OrderStatus = (typeof orderStatus)[keyof typeof orderStatus];
 
