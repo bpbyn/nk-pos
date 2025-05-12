@@ -129,52 +129,48 @@ export default function Analytics() {
                 className="md:col-span-full"
               >
                 <TabsList>
-                  {Object.keys(productType)
-                    .slice(0, -1)
-                    .map((type, i) => (
-                      <TabsTrigger
-                        value={type}
-                        className="capitalize"
-                        key={`radial-analytics-card-tabs-${i}`}
-                      >
-                        {type}
-                      </TabsTrigger>
-                    ))}
-                </TabsList>
-                {Object.keys(productType)
-                  .slice(0, -1)
-                  .map((type, i) => (
-                    <TabsContent value={type} key={`radial-analytics-card-${i}`}>
-                      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-                        <ProductSalesCard
-                          className="md:col-span-2"
-                          productTypes={groupedProductTypes}
-                        />
-                        <div className="grid gap-8 md:col-span-1">
-                          <RadialAnalyticsCard
-                            cups={totalCupsPerSize[0]}
-                            total={totalCupsPerSize[1]}
-                          />
-                          <AverageSalesCard salesPerDate={totalSalesPerDate} />
-                        </div>
-                        <div className="grid place-content-start gap-4 md:col-span-1 md:gap-8">
-                          <ProductFeatureCard
-                            groupedProductTypes={groupedProductTypes.slice(0, 3)}
-                            featureType="bestSeller"
-                          />
-                          <ProductFeatureCard
-                            groupedProductTypes={groupedProductTypes
-                              .slice(1)
-                              .slice(-3)
-                              .reverse()
-                              .sort((a, b) => a.price - b.price)}
-                            featureType="leastPopular"
-                          />
-                          <DailyCupsSoldAreaCard dailyCupsSold={totalDailyCupsSold} />
-                        </div>
-                      </div>
-                    </TabsContent>
+                  {Object.keys(productType).map((type, i) => (
+                    <TabsTrigger
+                      value={type}
+                      className="capitalize"
+                      key={`radial-analytics-card-tabs-${i}`}
+                    >
+                      {type}
+                    </TabsTrigger>
                   ))}
+                </TabsList>
+                {Object.keys(productType).map((type, i) => (
+                  <TabsContent value={type} key={`radial-analytics-card-${i}`}>
+                    <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+                      <ProductSalesCard
+                        className="md:col-span-2"
+                        productTypes={groupedProductTypes}
+                      />
+                      <div className="grid gap-8 md:col-span-1">
+                        <RadialAnalyticsCard
+                          cups={totalCupsPerSize[0]}
+                          total={totalCupsPerSize[1]}
+                        />
+                        <AverageSalesCard salesPerDate={totalSalesPerDate} />
+                      </div>
+                      <div className="grid place-content-start gap-4 md:col-span-1 md:gap-8">
+                        <ProductFeatureCard
+                          groupedProductTypes={groupedProductTypes.slice(0, 3)}
+                          featureType="bestSeller"
+                        />
+                        <ProductFeatureCard
+                          groupedProductTypes={groupedProductTypes
+                            .slice(1)
+                            .slice(-3)
+                            .reverse()
+                            .sort((a, b) => a.price - b.price)}
+                          featureType="leastPopular"
+                        />
+                        <DailyCupsSoldAreaCard dailyCupsSold={totalDailyCupsSold} />
+                      </div>
+                    </div>
+                  </TabsContent>
+                ))}
               </Tabs>
             </div>
           </CardContent>
